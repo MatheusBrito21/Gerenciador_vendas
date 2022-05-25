@@ -1,7 +1,15 @@
 package br.com.projeto.model;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+@Entity
 public class Cliente {
-	
+	  
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	  private int id;
 	  private String nome;
 	  private String rg;
@@ -11,19 +19,18 @@ public class Cliente {
 	  private String celular;
 	  private String  cep;
 	  private String endereco;
-	  private int numero;
+	  private Integer numero;
 	  private String complemento;
 	  private String bairro;
 	  private String cidade;
 	  private String estado;
 	
 	  public Cliente() {
-		// TODO Auto-generated constructor stub
+		  
 	  }
 	  
 	  public Cliente(String nome, String rg, String cpf, String email, String telefone, String celular, String cep,
 			String endereco, int numero, String complemento, String bairro, String cidade, String estado) {
-		super();
 		this.nome = nome;
 		this.rg = rg;
 		this.cpf = cpf;
@@ -115,7 +122,7 @@ public class Cliente {
 		return numero;
 	}
 
-	public void setNumero(int numero) {
+	public void setNumero(Integer numero) {
 		this.numero = numero;
 	}
 
@@ -149,6 +156,14 @@ public class Cliente {
 
 	public void setEstado(String estado) {
 		this.estado = estado;
+	}
+
+	@Override
+	public String toString() {
+		return "Cliente [nome=" + nome + ", rg=" + rg + ", cpf=" + cpf + ", email=" + email + ", telefone=" + telefone
+				+ ", celular=" + celular + ", cep=" + cep + ", endereco=" + endereco + ", numero=" + numero
+				+ ", complemento=" + complemento + ", bairro=" + bairro + ", cidade=" + cidade + ", estado=" + estado
+				+ "]";
 	}
 	  
 	  

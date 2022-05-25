@@ -3,7 +3,6 @@ package br.com.projeto.view;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.SystemColor;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.ParseException;
@@ -24,6 +23,9 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.text.MaskFormatter;
 
+import br.com.projeto.dao.DAO;
+import br.com.projeto.model.Cliente;
+
 @SuppressWarnings("serial")
 public class FrmClientes extends JFrame {
 
@@ -38,17 +40,18 @@ public class FrmClientes extends JFrame {
 	private JTextField field_bairro;
 	private JTextField field_cidade;
 	private JTextField field_consul_nome;
+	private static JFormattedTextField field_celular;
+	private static JFormattedTextField field_telefone;
+	private static JFormattedTextField field_cep;
+	private static JFormattedTextField field_cpf;
+	private JComboBox<String> box_uf;
+	
 	private JTable table;
+	
 
 
-
-	/**
-	 * Create the frame.
-	 * @throws ParseException 
-	 */
-	@SuppressWarnings("unchecked")
 	public FrmClientes() throws ParseException {
-		setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\biserraadm-arquivos\\Eclipse\\GerenciadorVendas\\src\\main\\java\\br\\com\\projeto\\images\\icon1.png"));
+//		setIconImage(Toolkit.getDefaultToolkit().getImage("//images/icon1.png"));
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 761, 606);
@@ -133,7 +136,7 @@ public class FrmClientes extends JFrame {
 		lblNewLabel_1_1_1_2_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		lblNewLabel_1_1_1_2_1.setBounds(187, 139, 46, 21);
 		DadosPessoais.add(lblNewLabel_1_1_1_2_1);
-		JFormattedTextField field_celular = new JFormattedTextField(formatTextCelField);
+		field_celular = new JFormattedTextField(formatTextCelField);
 		field_celular.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		field_celular.setBounds(385, 110, 100, 20);
 		
@@ -143,11 +146,12 @@ public class FrmClientes extends JFrame {
 		lblNewLabel_1_1_1_1_1.setBounds(490, 110, 58, 21);
 		DadosPessoais.add(lblNewLabel_1_1_1_1_1);
 		
-		JFormattedTextField field_telefone = new JFormattedTextField(formatTextTelField);
+		field_telefone = new JFormattedTextField(formatTextTelField);
 		field_telefone.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		field_telefone.setBounds(551, 111, 100, 20);
 		DadosPessoais.add(field_telefone);
-		JFormattedTextField field_cpf = new JFormattedTextField(formatTextCPFField);
+		
+		field_cpf = new JFormattedTextField(formatTextCPFField);
 		field_cpf.setBounds(78, 139, 99, 21);
 		DadosPessoais.add(field_cpf);
 		
@@ -157,13 +161,13 @@ public class FrmClientes extends JFrame {
 		field_rg.setColumns(10);
 		
 
-		JLabel lblNewLabel_1_1_1_2_1_1 = new JLabel("CEP:");
-		lblNewLabel_1_1_1_2_1_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		lblNewLabel_1_1_1_2_1_1.setBounds(35, 171, 46, 21);
-		DadosPessoais.add(lblNewLabel_1_1_1_2_1_1);
+		JLabel cep = new JLabel("CEP:");
+		cep.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		cep.setBounds(35, 171, 46, 21);
+		DadosPessoais.add(cep);
 		
 		
-		JFormattedTextField field_cep = new JFormattedTextField(formatTextCEPField);
+		field_cep = new JFormattedTextField(formatTextCEPField);
 		field_cep.setBounds(78, 171, 99, 20);
 		DadosPessoais.add(field_cep);
 		
@@ -221,9 +225,8 @@ public class FrmClientes extends JFrame {
 		lblNewLabel_1_2_3_1_1.setBounds(343, 202, 30, 21);
 		DadosPessoais.add(lblNewLabel_1_2_3_1_1);
 		
-		@SuppressWarnings("rawtypes")
-		JComboBox box_uf = new JComboBox();
-		box_uf.setModel(new DefaultComboBoxModel<Object>(new String[] {"\u00A0AC", "\u00A0AL", "\u00A0AP", "\u00A0AM", "\u00A0BA", "\u00A0CE", "\u00A0DF", "\u00A0ES", "\u00A0GO", "\u00A0MA", "\u00A0MT", "\u00A0MS", "\u00A0MG", "\u00A0PA", "\u00A0PB", "\u00A0PR", "\u00A0PE", "\u00A0PI", "\u00A0RJ", "\u00A0RN", "\u00A0RS", "\u00A0RO", "\u00A0RR", "\u00A0SC", "\u00A0SP", "\u00A0SE", "\u00A0TO"}));
+		box_uf = new JComboBox<String>();
+		box_uf.setModel(new DefaultComboBoxModel<String>(new String[] {"\u00A0AC", "\u00A0AL", "\u00A0AP", "\u00A0AM", "\u00A0BA", "\u00A0CE", "\u00A0DF", "\u00A0ES", "\u00A0GO", "\u00A0MA", "\u00A0MT", "\u00A0MS", "\u00A0MG", "\u00A0PA", "\u00A0PB", "\u00A0PR", "\u00A0PE", "\u00A0PI", "\u00A0RJ", "\u00A0RN", "\u00A0RS", "\u00A0RO", "\u00A0RR", "\u00A0SC", "\u00A0SP", "\u00A0SE", "\u00A0TO"}));
 		box_uf.setSelectedIndex(0);
 		box_uf.setBounds(366, 202, 49, 22);
 		DadosPessoais.add(box_uf);
@@ -278,6 +281,11 @@ public class FrmClientes extends JFrame {
 		
 		JButton bt_salvar = new JButton("Salvar");
 		bt_salvar.setBounds(124, 519, 89, 23);
+		bt_salvar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				cadastrarCliente();
+			}
+		});
 		FrmClientes.add(bt_salvar);
 		
 		JButton bt_editar = new JButton("Editar");
@@ -298,6 +306,7 @@ public class FrmClientes extends JFrame {
 		table.setModel(model);
 	}
 	
+	//botao Novo
 	public void limparFormulario() {
 		 field_codigo.setText("");
 		 field_nome.setText("");
@@ -309,21 +318,31 @@ public class FrmClientes extends JFrame {
 		 field_bairro.setText("");
 		 field_cidade.setText("");
 		 field_consul_nome.setText("");
-		 
-
-	}
-	public JPanel getFrmClientes() {
-		return FrmClientes;
-	}
-	public void setFrmClientes(JPanel frmClientes) {
-		FrmClientes = frmClientes;
-	}
-	public JTable getTable() {
-		return table;
-	}
-	public void setTable(JTable table) {
-		this.table = table;
-	}
+		 field_celular.setText("");
+		 field_telefone.setText("");
+		 field_cep.setText("");
+		 field_cpf.setText("");
+	};
 	
+	public void cadastrarCliente() {
+		Cliente c = new Cliente();
+		DAO<Cliente> dao_cliente = new DAO<>(Cliente.class);
+		
+			c.setNome(field_nome.getText());
+			c.setEmail(field_email.getText());
+			c.setCelular(field_celular.getText());
+			c.setTelefone(field_telefone.getText());
+			c.setCpf(field_cpf.getText());
+			c.setRg(field_rg.getText());
+			c.setCep(field_cep.getText());
+			c.setEndereco(field_endereco.getText());
+			c.setComplemento(field_compl.getText());
+			c.setNumero(Integer.parseInt(field_numero.getText()));
+			c.setBairro(field_bairro.getText());
+			c.setCidade(field_cidade.getText());
+			c.setEstado(box_uf.getItemAt(box_uf.getSelectedIndex()));
+			
+		dao_cliente.incluirAtomico(c);
+	}
 	
 }
