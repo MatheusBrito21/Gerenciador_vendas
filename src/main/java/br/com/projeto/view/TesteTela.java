@@ -8,8 +8,8 @@ public class TesteTela {
         FrmClientes janela = new FrmClientes();
         janela.setVisible(true);
         
-//        DAO<Object> dao = new DAO<>();
         
+       
         
     }
 }

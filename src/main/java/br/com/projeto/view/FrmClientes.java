@@ -6,6 +6,7 @@ import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.ParseException;
+import java.util.List;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -14,6 +15,7 @@ import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
@@ -46,7 +48,9 @@ public class FrmClientes extends JFrame {
 	private static JFormattedTextField field_cpf;
 	private JComboBox<String> box_uf;
 	
-	private JTable table;
+
+	private JTable tabelaClientes;
+	
 	
 
 
@@ -246,29 +250,46 @@ public class FrmClientes extends JFrame {
 		field_consul_nome.setBounds(72, 47, 253, 20);
 		ConsultarCliente.add(field_consul_nome);
 		
-		table = new JTable();
-		table.setShowGrid(false);
-		table.setVisible(true);
-		table.setSurrendersFocusOnKeystroke(true);
-		table.setRowSelectionAllowed(false);
-		table.setToolTipText("");
-		table.setCellSelectionEnabled(true);
-		table.setColumnSelectionAllowed(true);
-		table.setModel(new DefaultTableModel(
+		tabelaClientes = new JTable();
+		tabelaClientes.setColumnSelectionAllowed(true);
+		tabelaClientes.setAutoResizeMode(NORMAL);
+		tabelaClientes.setSurrendersFocusOnKeystroke(true);
+		tabelaClientes.setRowSelectionAllowed(false);
+		tabelaClientes.setToolTipText("");
+		tabelaClientes.setCellSelectionEnabled(true);
+		tabelaClientes.setColumnSelectionAllowed(true);
+		tabelaClientes.setModel(new DefaultTableModel(
 			new Object[][] {
-				{null, null, null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null, null, null, null},
 			},
 			new String[] {
-				"Nome", "Email", "Celular", "Telefone", "CPF", "RG", "Endere\u00E7o", "N\u00FAmero", "Complemento", "Bairro", "Cidade", "UF", "CEP"
+				"C\u00F3digo", "Nome", "Email", "Celular", "Telefone", "CPF", "RG", "Endere\u00E7o", "N\u00FAmero", "Complemento", "Bairro", "Cidade", "UF", "CEP"
 			}
-		));
-		table.getColumnModel().getColumn(0).setResizable(false);
-		table.setBounds(29, 159, 676, 139);
-		ConsultarCliente.add(table);
+		) {
+			boolean[] columnEditables = new boolean[] {
+				true, true, false, true, true, true, true, true, true, true, true, true, true, true
+			};
+			public boolean isCellEditable(int row, int column) {
+				return columnEditables[column];
+			}
+		});
+		tabelaClientes.getColumnModel().getColumn(1).setResizable(false);
+		tabelaClientes.getColumnModel().getColumn(2).setResizable(false);
+		tabelaClientes.setBounds(10, 157, 676, 139);
 		
 		JButton bt_pesquisar = new JButton("Pesquisar");
 		bt_pesquisar.setBounds(335, 47, 103, 23);
+		bt_pesquisar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				listarClientes();
+			}
+		});
 		ConsultarCliente.add(bt_pesquisar);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(10, 158, 676, 141);
+		scrollPane.setViewportView(tabelaClientes);
+		ConsultarCliente.add(scrollPane);
 		
 		JButton bt_novo = new JButton("Novo");
 		bt_novo.addActionListener(new ActionListener() {
@@ -300,10 +321,10 @@ public class FrmClientes extends JFrame {
 		
 	}
 	public TableModel getTableModel() {
-		return table.getModel();
+		return tabelaClientes.getModel();
 	}
 	public void setTableModel(TableModel model) {
-		table.setModel(model);
+		tabelaClientes.setModel(model);
 	}
 	
 	//botao Novo
@@ -327,7 +348,6 @@ public class FrmClientes extends JFrame {
 	public void cadastrarCliente() {
 		Cliente c = new Cliente();
 		DAO<Cliente> dao_cliente = new DAO<>(Cliente.class);
-		
 			c.setNome(field_nome.getText());
 			c.setEmail(field_email.getText());
 			c.setCelular(field_celular.getText());
@@ -345,4 +365,38 @@ public class FrmClientes extends JFrame {
 		dao_cliente.incluirAtomico(c);
 	}
 	
+	public void listarClientes() {
+		DAO<Cliente> dao_cliente = new DAO<>(Cliente.class);
+		String parametro = "%"+field_consul_nome.getText()+"%";
+		
+		List<Cliente> lista = dao_cliente
+			.consultar("consultarPorNome","nome", parametro);
+		
+		DefaultTableModel dados_tabela = (DefaultTableModel) tabelaClientes.getModel();
+		//limpa a tabela
+		dados_tabela.setNumRows(0);
+		
+		for(Cliente c: lista) {
+			dados_tabela.addRow(new Object[]{
+					c.getId(),
+					c.getNome(),
+					c.getEmail(),
+					c.getCelular(),
+					c.getTelefone(),
+					c.getCpf(),
+					c.getRg(),
+					c.getCep(),
+					c.getEndereco(),
+					c.getComplemento(),
+					c.getNumero(),
+					c.getBairro(),
+					c.getCidade(),
+					c.getEstado()
+			});
+		}
+			
+		
+		
+
+	}
 }

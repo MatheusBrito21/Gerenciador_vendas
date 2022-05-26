@@ -4,8 +4,16 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 
 @Entity
+@NamedQueries(
+		//seleciona a partir do nome da Entidade, nao da tabela
+		//Cliente != cliente;
+		@NamedQuery(name = "consultarPorNome",
+		query ="select c from Cliente c where c.nome like :nome")
+		)
 public class Cliente {
 	  
 	@Id
