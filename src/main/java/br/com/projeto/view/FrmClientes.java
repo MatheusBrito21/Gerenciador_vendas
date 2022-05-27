@@ -14,11 +14,13 @@ import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
@@ -27,6 +29,8 @@ import javax.swing.text.MaskFormatter;
 
 import br.com.projeto.dao.DAO;
 import br.com.projeto.model.Cliente;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 @SuppressWarnings("serial")
 public class FrmClientes extends JFrame {
@@ -57,7 +61,7 @@ public class FrmClientes extends JFrame {
 	public FrmClientes() throws ParseException {
 //		setIconImage(Toolkit.getDefaultToolkit().getImage("//images/icon1.png"));
 		setResizable(false);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 761, 606);
 		FrmClientes = new JPanel();
 		FrmClientes.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -102,6 +106,7 @@ public class FrmClientes extends JFrame {
 		DadosPessoais.add(lblNewLabel_1);
 		
 		field_codigo = new JTextField();
+		field_codigo.setEditable(false);
 		field_codigo.setColumns(10);
 		field_codigo.setBounds(78, 40, 99, 20);
 		DadosPessoais.add(field_codigo);
@@ -250,31 +255,51 @@ public class FrmClientes extends JFrame {
 		field_consul_nome.setBounds(72, 47, 253, 20);
 		ConsultarCliente.add(field_consul_nome);
 		
+		//ao clicar na linha selecionada na tabela
+		//os dados serao enviados para os respectivos campos na janela Dados pessoais
+		//ao clicar em editar os dados serao atualizados
 		tabelaClientes = new JTable();
-		tabelaClientes.setColumnSelectionAllowed(true);
+		tabelaClientes.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				janelas.setSelectedIndex(0);
+				
+				 field_codigo.setText( tabelaClientes.getValueAt(tabelaClientes.getSelectedRow(),0).toString());
+				 field_nome.setText((String) tabelaClientes.getValueAt(tabelaClientes.getSelectedRow(),1).toString());
+				 field_email.setText((String) tabelaClientes.getValueAt(tabelaClientes.getSelectedRow(),2).toString());
+				 field_celular.setText((String) tabelaClientes.getValueAt(tabelaClientes.getSelectedRow(),3).toString());
+				 field_telefone.setText((String) tabelaClientes.getValueAt(tabelaClientes.getSelectedRow(),4).toString());
+				 field_cpf.setText((String) tabelaClientes.getValueAt(tabelaClientes.getSelectedRow(),5).toString());
+				 field_rg.setText((String) tabelaClientes.getValueAt(tabelaClientes.getSelectedRow(),6).toString());
+				 field_cep.setText((String) tabelaClientes.getValueAt(tabelaClientes.getSelectedRow(),7).toString());
+				 field_endereco.setText((String) tabelaClientes.getValueAt(tabelaClientes.getSelectedRow(),8).toString());
+				 field_numero.setText((String) tabelaClientes.getValueAt(tabelaClientes.getSelectedRow(),9).toString());
+				 field_compl.setText((String) tabelaClientes.getValueAt(tabelaClientes.getSelectedRow(),10).toString());
+				 field_bairro.setText((String) tabelaClientes.getValueAt(tabelaClientes.getSelectedRow(),11).toString());
+				 field_cidade.setText((String) tabelaClientes.getValueAt(tabelaClientes.getSelectedRow(),12).toString());
+				 box_uf.setSelectedItem(tabelaClientes.getValueAt(tabelaClientes.getSelectedRow(), 13).toString());
+				
+			}
+		});
+		tabelaClientes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		tabelaClientes.setShowVerticalLines(true);
 		tabelaClientes.setAutoResizeMode(NORMAL);
 		tabelaClientes.setSurrendersFocusOnKeystroke(true);
-		tabelaClientes.setRowSelectionAllowed(false);
 		tabelaClientes.setToolTipText("");
-		tabelaClientes.setCellSelectionEnabled(true);
-		tabelaClientes.setColumnSelectionAllowed(true);
 		tabelaClientes.setModel(new DefaultTableModel(
 			new Object[][] {
 				{null, null, null, null, null, null, null, null, null, null, null, null, null, null},
 			},
 			new String[] {
-				"C\u00F3digo", "Nome", "Email", "Celular", "Telefone", "CPF", "RG", "Endere\u00E7o", "N\u00FAmero", "Complemento", "Bairro", "Cidade", "UF", "CEP"
+				"C\u00F3digo", "Nome", "Email", "Celular", "Telefone", "CPF", "RG", "CEP", "Endere\u00E7o", "N\u00FAmero", "Complemento", "Bairro", "Cidade", "UF"
 			}
 		) {
 			boolean[] columnEditables = new boolean[] {
-				true, true, false, true, true, true, true, true, true, true, true, true, true, true
+				false, false, false, false, false, false, false, false, false, false, false, false, false, false
 			};
 			public boolean isCellEditable(int row, int column) {
 				return columnEditables[column];
 			}
 		});
-		tabelaClientes.getColumnModel().getColumn(1).setResizable(false);
-		tabelaClientes.getColumnModel().getColumn(2).setResizable(false);
 		tabelaClientes.setBounds(10, 157, 676, 139);
 		
 		JButton bt_pesquisar = new JButton("Pesquisar");
@@ -291,7 +316,7 @@ public class FrmClientes extends JFrame {
 		scrollPane.setViewportView(tabelaClientes);
 		ConsultarCliente.add(scrollPane);
 		
-		JButton bt_novo = new JButton("Novo");
+		JButton bt_novo = new JButton("Limpar");
 		bt_novo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				limparFormulario();
@@ -300,8 +325,8 @@ public class FrmClientes extends JFrame {
 		bt_novo.setBounds(25, 519, 89, 23);
 		FrmClientes.add(bt_novo);
 		
-		JButton bt_salvar = new JButton("Salvar");
-		bt_salvar.setBounds(124, 519, 89, 23);
+		JButton bt_salvar = new JButton("Cadastrar");
+		bt_salvar.setBounds(124, 519, 102, 23);
 		bt_salvar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				cadastrarCliente();
@@ -309,12 +334,23 @@ public class FrmClientes extends JFrame {
 		});
 		FrmClientes.add(bt_salvar);
 		
-		JButton bt_editar = new JButton("Editar");
-		bt_editar.setBounds(223, 519, 89, 23);
+		JButton bt_editar = new JButton("Alterar");
+		bt_editar.setBounds(233, 519, 89, 23);
+		bt_editar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				alterarCliente();
+			}
+		});
 		FrmClientes.add(bt_editar);
 		
 		JButton bt_excluir = new JButton("Excluir");
-		bt_excluir.setBounds(322, 519, 89, 23);
+		bt_excluir.setBounds(333, 519, 89, 23);
+		bt_excluir.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e) {
+				excluirCliente();
+			}
+		});
 		FrmClientes.add(bt_excluir);
 		
 		
@@ -343,6 +379,8 @@ public class FrmClientes extends JFrame {
 		 field_telefone.setText("");
 		 field_cep.setText("");
 		 field_cpf.setText("");
+		 
+		 tabelaClientes.clearSelection();
 	};
 	
 	public void cadastrarCliente() {
@@ -363,11 +401,12 @@ public class FrmClientes extends JFrame {
 			c.setEstado(box_uf.getItemAt(box_uf.getSelectedIndex()));
 			
 		dao_cliente.incluirAtomico(c);
+		JOptionPane.showMessageDialog(FrmClientes,"Novo usuário cadastrado!\nNome: "+ c.getNome());
 	}
 	
 	public void listarClientes() {
 		DAO<Cliente> dao_cliente = new DAO<>(Cliente.class);
-		String parametro = "%"+field_consul_nome.getText()+"%";
+		String parametro = field_consul_nome.getText()+"%";
 		
 		List<Cliente> lista = dao_cliente
 			.consultar("consultarPorNome","nome", parametro);
@@ -387,16 +426,53 @@ public class FrmClientes extends JFrame {
 					c.getRg(),
 					c.getCep(),
 					c.getEndereco(),
-					c.getComplemento(),
 					c.getNumero(),
+					c.getComplemento(),
 					c.getBairro(),
 					c.getCidade(),
 					c.getEstado()
 			});
 		}
-			
-		
-		
-
 	}
-}
+	
+	public void alterarCliente() {
+		Cliente c = new Cliente();
+		DAO<Cliente> dao_cliente = new DAO<>(Cliente.class);
+		Integer parametro = Integer.parseInt(field_codigo.getText());
+		
+		c = dao_cliente.consultar("consultarPorId","id",parametro).get(0);
+		
+		c.setNome(field_nome.getText());
+		c.setEmail(field_email.getText());
+		c.setCelular(field_celular.getText());
+		c.setTelefone(field_telefone.getText());
+		c.setCpf(field_cpf.getText());
+		c.setRg(field_rg.getText());
+		c.setCep(field_cep.getText());
+		c.setEndereco(field_endereco.getText());
+		c.setComplemento(field_compl.getText());
+		c.setNumero(Integer.parseInt(field_numero.getText()));
+		c.setBairro(field_bairro.getText());
+		c.setCidade(field_cidade.getText());
+		c.setEstado(box_uf.getItemAt(box_uf.getSelectedIndex()));
+		
+		dao_cliente.alterar(c);
+		limparFormulario();
+		JOptionPane.showMessageDialog(FrmClientes,"Usuário: "+ c.getNome()+"\nDados atualizados!");
+	}
+	
+	public void excluirCliente() {
+		Cliente c = new Cliente();
+		DAO<Cliente> dao_cliente = new DAO<>(Cliente.class);
+		Integer parametro = Integer.parseInt(field_codigo.getText());
+		
+		c = dao_cliente.consultar("consultarPorId","id",parametro).get(0);
+		
+		dao_cliente.excluir(c);
+		limparFormulario();
+		JOptionPane.showMessageDialog(FrmClientes,"Usuário: "+ c.getNome()+"\nDados excluídos!");
+	}
+	
+	
+	
+}//FimJanela

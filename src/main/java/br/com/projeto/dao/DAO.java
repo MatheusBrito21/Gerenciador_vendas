@@ -52,6 +52,17 @@ public class DAO<E> {
 		return this;
 	}
 	
+	public DAO<E> alterar(E entidade){
+		return this.abriT().fecharT();
+	}
+	
+	public DAO<E> excluir(E entidade){
+		em.getTransaction().begin();
+		em.remove(entidade);
+		em.getTransaction().commit();
+		return this;
+	}
+	
 	public DAO<E> incluirAtomico(E entidade){
 		return this.abriT().incluir(entidade).fecharT();
 	}

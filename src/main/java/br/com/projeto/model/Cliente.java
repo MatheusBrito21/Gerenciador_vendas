@@ -8,12 +8,16 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 
 @Entity
-@NamedQueries(
+@NamedQueries({
 		//seleciona a partir do nome da Entidade, nao da tabela
 		//Cliente != cliente;
 		@NamedQuery(name = "consultarPorNome",
-		query ="select c from Cliente c where c.nome like :nome")
-		)
+		query ="select c from Cliente c where c.nome like :nome"),
+		
+		//seleciona a partir do Id
+		@NamedQuery(name = "consultarPorId",
+		query = "select c from Cliente c where c.id = :id")
+})
 public class Cliente {
 	  
 	@Id
