@@ -18,6 +18,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
@@ -30,13 +31,12 @@ import javax.swing.table.TableModel;
 import javax.swing.text.MaskFormatter;
 
 import br.com.projeto.dao.DAO;
-import br.com.projeto.dao.WebServiceCep;
-import br.com.projeto.model.Cliente;
+import br.com.projeto.model.Funcionario;
 
 @SuppressWarnings("serial")
-public class FrmClientes extends JFrame {
+public class FrmFuncionarios extends JFrame {
 
-	private JPanel FrmClientes;
+	private JPanel FrmFuncionarios;
 	private JTextField field_codigo;
 	private JTextField field_nome;
 	private JTextField field_email;
@@ -53,39 +53,42 @@ public class FrmClientes extends JFrame {
 	private static JFormattedTextField field_cpf;
 	private JComboBox<String> box_uf;
 	
-
-	private JTable tabelaClientes;
+	//atributos especificos de funcionarios
+	private JComboBox<String> box_nivelAcesso; 
+	private JTable tabelaFuncionarios;
+	private JPasswordField field_senha;
+	private JTextField field_cargo;
 	
 	
 
 
-	public FrmClientes() throws ParseException {
+	public FrmFuncionarios() throws ParseException {
 //		setIconImage(Toolkit.getDefaultToolkit().getImage("//images/icon1.png"));
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 761, 606);
-		FrmClientes = new JPanel();
-		FrmClientes.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setContentPane(FrmClientes);
-		FrmClientes.setLayout(null);
+		FrmFuncionarios = new JPanel();
+		FrmFuncionarios.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(FrmFuncionarios);
+		FrmFuncionarios.setLayout(null);
 		
 		JPanel panel = new JPanel();
 		panel.setBackground(SystemColor.textHighlight);
 		panel.setBounds(5, 5, 735, 68);
-		FrmClientes.add(panel);
+		FrmFuncionarios.add(panel);
 		panel.setLayout(null);
 		
-		JLabel lblNewLabel = new JLabel("Cadastro de Clientes");
-		lblNewLabel.setFont(new Font("Arial Black", Font.BOLD, 25));
-		lblNewLabel.setBounds(10, 25, 351, 32);
-		lblNewLabel.setForeground(SystemColor.text);
-		lblNewLabel.setBackground(new Color(240, 240, 240));
-		lblNewLabel.setHorizontalAlignment(SwingConstants.LEFT);
-		panel.add(lblNewLabel);
+		JLabel Titulo = new JLabel("Cadastro de Funcionários");
+		Titulo.setFont(new Font("Arial Black", Font.BOLD, 25));
+		Titulo.setBounds(10, 25, 403, 32);
+		Titulo.setForeground(SystemColor.text);
+		Titulo.setBackground(new Color(240, 240, 240));
+		Titulo.setHorizontalAlignment(SwingConstants.LEFT);
+		panel.add(Titulo);
 		
 		JTabbedPane janelas = new JTabbedPane(JTabbedPane.TOP);
 		janelas.setBounds(15, 84, 720, 424);
-		FrmClientes.add(janelas);
+		FrmFuncionarios.add(janelas);
 		
 		
 		MaskFormatter formatTextCelField = new MaskFormatter("(##) #####-####");
@@ -241,81 +244,115 @@ public class FrmClientes extends JFrame {
 		box_uf.setBounds(366, 202, 49, 22);
 		DadosPessoais.add(box_uf);
 		
+		JLabel lblNewLabel = new JLabel("Senha:");
+		lblNewLabel.setBounds(35, 235, 46, 14);
+		DadosPessoais.add(lblNewLabel);
 		
-		JPanel ConsultarCliente = new JPanel();
-		janelas.addTab("Consultar Clientes", null, ConsultarCliente, null);
-		ConsultarCliente.setLayout(null);
+		field_senha = new JPasswordField();
+		field_senha.setBounds(78, 235, 99, 20);
+		DadosPessoais.add(field_senha);
 		
-		JLabel lblNewLabel_1_1_2 = new JLabel("Nome:");
+		JLabel lblNewLabel_1_2_3_1_1_1 = new JLabel("Nivel de Acesso:");
+		lblNewLabel_1_2_3_1_1_1.setBounds(187, 235, 113, 21);
+		DadosPessoais.add(lblNewLabel_1_2_3_1_1_1);
+		
+		box_nivelAcesso = new JComboBox<String>();
+		box_nivelAcesso.setModel(new DefaultComboBoxModel<String>(new String[] {"Usuário", "Administrador"}));
+		box_nivelAcesso.setSelectedIndex(0);
+		box_nivelAcesso.setBounds(282, 234, 105, 22);
+		DadosPessoais.add(box_nivelAcesso);
+		
+		JLabel lblNewLabel_1_1_2 = new JLabel("Cargo:");
 		lblNewLabel_1_1_2.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		lblNewLabel_1_1_2.setBounds(29, 47, 46, 21);
-		ConsultarCliente.add(lblNewLabel_1_1_2);
+		lblNewLabel_1_1_2.setBounds(341, 75, 46, 21);
+		DadosPessoais.add(lblNewLabel_1_1_2);
+		
+		field_cargo = new JTextField();
+		field_cargo.setColumns(10);
+		field_cargo.setBounds(384, 75, 164, 20);
+		DadosPessoais.add(field_cargo);
+		
+		
+		JPanel ConsultarFuncionario = new JPanel();
+		janelas.addTab("Consultar Funcionário", null, ConsultarFuncionario, null);
+		ConsultarFuncionario.setLayout(null);
+		
+		JLabel cons_lb_nome = new JLabel("Nome:");
+		cons_lb_nome.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		cons_lb_nome.setBounds(29, 47, 46, 21);
+		ConsultarFuncionario.add(cons_lb_nome);
 		
 		field_consul_nome = new JTextField();
 		field_consul_nome.setColumns(10);
 		field_consul_nome.setBounds(72, 47, 253, 20);
-		ConsultarCliente.add(field_consul_nome);
+		ConsultarFuncionario.add(field_consul_nome);
 		
 		//ao clicar na linha selecionada na tabela
 		//os dados serao enviados para os respectivos campos na janela Dados pessoais
 		//ao clicar em editar os dados serao atualizados
-		tabelaClientes = new JTable();
-		tabelaClientes.addMouseListener(new MouseAdapter() {
+		tabelaFuncionarios = new JTable();
+		tabelaFuncionarios.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				janelas.setSelectedIndex(0);
 				
-				 field_codigo.setText( tabelaClientes.getValueAt(tabelaClientes.getSelectedRow(),0).toString());
-				 field_nome.setText((String) tabelaClientes.getValueAt(tabelaClientes.getSelectedRow(),1).toString());
-				 field_email.setText((String) tabelaClientes.getValueAt(tabelaClientes.getSelectedRow(),2).toString());
-				 field_celular.setText((String) tabelaClientes.getValueAt(tabelaClientes.getSelectedRow(),3).toString());
-				 field_telefone.setText((String) tabelaClientes.getValueAt(tabelaClientes.getSelectedRow(),4).toString());
-				 field_cpf.setText((String) tabelaClientes.getValueAt(tabelaClientes.getSelectedRow(),5).toString());
-				 field_rg.setText((String) tabelaClientes.getValueAt(tabelaClientes.getSelectedRow(),6).toString());
-				 field_cep.setText((String) tabelaClientes.getValueAt(tabelaClientes.getSelectedRow(),7).toString());
-				 field_endereco.setText((String) tabelaClientes.getValueAt(tabelaClientes.getSelectedRow(),8).toString());
-				 field_numero.setText((String) tabelaClientes.getValueAt(tabelaClientes.getSelectedRow(),9).toString());
-				 field_compl.setText((String) tabelaClientes.getValueAt(tabelaClientes.getSelectedRow(),10).toString());
-				 field_bairro.setText((String) tabelaClientes.getValueAt(tabelaClientes.getSelectedRow(),11).toString());
-				 field_cidade.setText((String) tabelaClientes.getValueAt(tabelaClientes.getSelectedRow(),12).toString());
-				 box_uf.setSelectedItem(tabelaClientes.getValueAt(tabelaClientes.getSelectedRow(), 13).toString());
+				 field_codigo.setText( tabelaFuncionarios.getValueAt(tabelaFuncionarios.getSelectedRow(),0).toString());
+				 field_nome.setText((String) tabelaFuncionarios.getValueAt(tabelaFuncionarios.getSelectedRow(),1).toString());
+				 field_cargo.setText((String) tabelaFuncionarios.getValueAt(tabelaFuncionarios.getSelectedRow(),2).toString());
+				 field_email.setText((String) tabelaFuncionarios.getValueAt(tabelaFuncionarios.getSelectedRow(),4).toString());
+				 field_celular.setText((String) tabelaFuncionarios.getValueAt(tabelaFuncionarios.getSelectedRow(),5).toString());
+				 field_telefone.setText((String) tabelaFuncionarios.getValueAt(tabelaFuncionarios.getSelectedRow(),6).toString());
+				 field_cpf.setText((String) tabelaFuncionarios.getValueAt(tabelaFuncionarios.getSelectedRow(),7).toString());
+				 field_rg.setText((String) tabelaFuncionarios.getValueAt(tabelaFuncionarios.getSelectedRow(),8).toString());
+				 field_cep.setText((String) tabelaFuncionarios.getValueAt(tabelaFuncionarios.getSelectedRow(),9).toString());
+				 field_endereco.setText((String) tabelaFuncionarios.getValueAt(tabelaFuncionarios.getSelectedRow(),10).toString());
+				 field_numero.setText((String) tabelaFuncionarios.getValueAt(tabelaFuncionarios.getSelectedRow(),11).toString());
+				 field_compl.setText((String) tabelaFuncionarios.getValueAt(tabelaFuncionarios.getSelectedRow(),12).toString());
+				 field_bairro.setText((String) tabelaFuncionarios.getValueAt(tabelaFuncionarios.getSelectedRow(),13).toString());
+				 field_cidade.setText((String) tabelaFuncionarios.getValueAt(tabelaFuncionarios.getSelectedRow(),14).toString());
+				 box_uf.setSelectedItem(tabelaFuncionarios.getValueAt(tabelaFuncionarios.getSelectedRow(), 15).toString());
+				 field_senha.setText("");
+				 box_nivelAcesso.setSelectedItem(tabelaFuncionarios.getValueAt(tabelaFuncionarios.getSelectedRow(), 3).toString());
 				
 			}
 		});
-		tabelaClientes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		tabelaClientes.setShowVerticalLines(true);
-		tabelaClientes.setAutoResizeMode(NORMAL);
-		tabelaClientes.setSurrendersFocusOnKeystroke(true);
-		tabelaClientes.setToolTipText("");
-		tabelaClientes.setModel(new DefaultTableModel(
+		tabelaFuncionarios.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		tabelaFuncionarios.setShowVerticalLines(true);
+		tabelaFuncionarios.setAutoResizeMode(NORMAL);
+		tabelaFuncionarios.setSurrendersFocusOnKeystroke(true);
+		tabelaFuncionarios.setToolTipText("");
+		tabelaFuncionarios.setModel(new DefaultTableModel(
 			new Object[][] {
-				{null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
 			},
 			new String[] {
-				"C\u00F3digo", "Nome", "Email", "Celular", "Telefone", "CPF", "RG", "CEP", "Endere\u00E7o", "N\u00FAmero", "Complemento", "Bairro", "Cidade", "UF"
+				"C\u00F3digo", "Nome", "Cargo", "Nivel de Acesso", "Email", "Celular", "Telefone", "CPF", "RG", "CEP", "Endere\u00E7o", "N\u00FAmero", "Complemento", "Bairro", "Cidade", "UF"
 			}
 		) {
 			boolean[] columnEditables = new boolean[] {
-				false, false, false, false, false, false, false, false, false, false, false, false, false, false
+				false, false, true, true, false, false, false, false, false, false, false, false, false, false, false, false
 			};
 			public boolean isCellEditable(int row, int column) {
 				return columnEditables[column];
 			}
 		});
-		tabelaClientes.setBounds(10, 157, 676, 139);
+		tabelaFuncionarios.getColumnModel().getColumn(1).setPreferredWidth(110);
+		tabelaFuncionarios.getColumnModel().getColumn(3).setPreferredWidth(97);
+		tabelaFuncionarios.getColumnModel().getColumn(4).setPreferredWidth(103);
+		tabelaFuncionarios.setBounds(10, 157, 676, 139);
 		
 		JButton bt_pesquisar = new JButton("Pesquisar");
 		bt_pesquisar.setBounds(335, 47, 103, 23);
 		bt_pesquisar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				listarClientes();
+				listarFuncionarios();
 			}
 		});
-		ConsultarCliente.add(bt_pesquisar);
+		ConsultarFuncionario.add(bt_pesquisar);
 		
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(10, 158, 676, 141);
-		scrollPane.setViewportView(tabelaClientes);
-		ConsultarCliente.add(scrollPane);
+		scrollPane.setViewportView(tabelaFuncionarios);
+		ConsultarFuncionario.add(scrollPane);
 		
 		JButton bt_novo = new JButton("Limpar");
 		bt_novo.addActionListener(new ActionListener() {
@@ -324,44 +361,44 @@ public class FrmClientes extends JFrame {
 			}
 		});
 		bt_novo.setBounds(25, 519, 89, 23);
-		FrmClientes.add(bt_novo);
+		FrmFuncionarios.add(bt_novo);
 		
 		JButton bt_salvar = new JButton("Cadastrar");
 		bt_salvar.setBounds(124, 519, 102, 23);
 		bt_salvar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				cadastrarCliente();
+				cadastrarFuncionario();
 			}
 		});
-		FrmClientes.add(bt_salvar);
+		FrmFuncionarios.add(bt_salvar);
 		
 		JButton bt_editar = new JButton("Alterar");
 		bt_editar.setBounds(233, 519, 89, 23);
 		bt_editar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				alterarCliente();
+				alterarFunc();
 			}
 		});
-		FrmClientes.add(bt_editar);
+		FrmFuncionarios.add(bt_editar);
 		
 		JButton bt_excluir = new JButton("Excluir");
 		bt_excluir.setBounds(333, 519, 89, 23);
 		bt_excluir.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e) {
-				excluirCliente();
+				excluirFunc();
 			}
 		});
-		FrmClientes.add(bt_excluir);
+		FrmFuncionarios.add(bt_excluir);
 		
 		
 		
 	}
 	public TableModel getTableModel() {
-		return tabelaClientes.getModel();
+		return tabelaFuncionarios.getModel();
 	}
 	public void setTableModel(TableModel model) {
-		tabelaClientes.setModel(model);
+		tabelaFuncionarios.setModel(model);
 	}
 	
 	//botao Novo
@@ -380,121 +417,127 @@ public class FrmClientes extends JFrame {
 		 field_telefone.setText("");
 		 field_cep.setText("");
 		 field_cpf.setText("");
+		 field_senha.setText("");
 		 
-		 tabelaClientes.clearSelection();
+		 tabelaFuncionarios.clearSelection();
 	};
 	
-	public void cadastrarCliente() {
-		Cliente c = new Cliente();
-		DAO<Cliente> dao_cliente = new DAO<>(Cliente.class);
-			c.setNome(field_nome.getText());
-			c.setEmail(field_email.getText());
-			c.setCelular(field_celular.getText());
-			c.setTelefone(field_telefone.getText());
-			c.setCpf(field_cpf.getText());
-			c.setRg(field_rg.getText());
-			c.setCep(field_cep.getText());
-			c.setEndereco(field_endereco.getText());
-			c.setComplemento(field_compl.getText());
-			c.setNumero(Integer.parseInt(field_numero.getText()));
-			c.setBairro(field_bairro.getText());
-			c.setCidade(field_cidade.getText());
-			c.setEstado(box_uf.getItemAt(box_uf.getSelectedIndex()));
+	public void cadastrarFuncionario() {
+		Funcionario f = new Funcionario();
+		DAO<Funcionario> dao_cliente = new DAO<>(Funcionario.class);
+			f.setNome(field_nome.getText());
+			f.setEmail(field_email.getText());
+			f.setCelular(field_celular.getText());
+			f.setTelefone(field_telefone.getText());
+			f.setCpf(field_cpf.getText());
+			f.setRg(field_rg.getText());
+			f.setCep(field_cep.getText());
+			f.setEndereco(field_endereco.getText());
+			f.setComplemento(field_compl.getText());
+			f.setNumero(Integer.parseInt(field_numero.getText()));
+			f.setBairro(field_bairro.getText());
+			f.setCidade(field_cidade.getText());
+			f.setEstado(box_uf.getItemAt(box_uf.getSelectedIndex()));
+			f.setSenha(field_senha.getPassword());
+			f.setCargo(field_cargo.getText());
+			f.setNivel_acesso(box_nivelAcesso.getItemAt(box_nivelAcesso.getSelectedIndex()));
 			
-		dao_cliente.incluirAtomico(c);
-		JOptionPane.showMessageDialog(FrmClientes,"Novo usuário cadastrado!\nNome: "+ c.getNome());
+			
+		dao_cliente.incluirAtomico(f);
+		JOptionPane.showMessageDialog(FrmFuncionarios,"Novo funcionário cadastrado!\nNome: "+ f.getNome());
 	}
 	
-	public void listarClientes() {
-		DAO<Cliente> dao_cliente = new DAO<>(Cliente.class);
+	public void listarFuncionarios() {
+		DAO<Funcionario> dao_func = new DAO<>(Funcionario.class);
 		String parametro = field_consul_nome.getText()+"%";
 		
-		List<Cliente> lista = dao_cliente
-			.consultar("consultarPorNome","nome", parametro);
+		List<Funcionario> lista = dao_func
+			.consultar("consultarFuncPorNome","nome", parametro);
 		
-		DefaultTableModel dados_tabela = (DefaultTableModel) tabelaClientes.getModel();
+		DefaultTableModel dados_tabela = (DefaultTableModel) tabelaFuncionarios.getModel();
 		//limpa a tabela
 		dados_tabela.setNumRows(0);
 		
-		for(Cliente c: lista) {
+		for(Funcionario f: lista) {
 			dados_tabela.addRow(new Object[]{
-					c.getId(),
-					c.getNome(),
-					c.getEmail(),
-					c.getCelular(),
-					c.getTelefone(),
-					c.getCpf(),
-					c.getRg(),
-					c.getCep(),
-					c.getEndereco(),
-					c.getNumero(),
-					c.getComplemento(),
-					c.getBairro(),
-					c.getCidade(),
-					c.getEstado()
+					f.getId(),
+					f.getNome(),
+					f.getCargo(),
+					f.getNivel_acesso(),
+					f.getEmail(),
+					f.getCelular(),
+					f.getTelefone(),
+					f.getCpf(),
+					f.getRg(),
+					f.getCep(),
+					f.getEndereco(),
+					f.getNumero(),
+					f.getComplemento(),
+					f.getBairro(),
+					f.getCidade(),
+					f.getEstado()
 			});
 		}
 	}
 	
-	public void alterarCliente() {
-		Cliente c = new Cliente();
-		DAO<Cliente> dao_cliente = new DAO<>(Cliente.class);
+	public void alterarFunc() {
+		Funcionario f = new Funcionario();
+		DAO<Funcionario> dao_func = new DAO<>(Funcionario.class);
 		Integer parametro = Integer.parseInt(field_codigo.getText());
 		
-		c = dao_cliente.consultar("consultarPorId","id",parametro).get(0);
+		f = dao_func.consultar("consultarFuncPorId","id",parametro).get(0);
 		
-		c.setNome(field_nome.getText());
-		c.setEmail(field_email.getText());
-		c.setCelular(field_celular.getText());
-		c.setTelefone(field_telefone.getText());
-		c.setCpf(field_cpf.getText());
-		c.setRg(field_rg.getText());
-		c.setCep(field_cep.getText());
-		c.setEndereco(field_endereco.getText());
-		c.setComplemento(field_compl.getText());
-		c.setNumero(Integer.parseInt(field_numero.getText()));
-		c.setBairro(field_bairro.getText());
-		c.setCidade(field_cidade.getText());
-		c.setEstado(box_uf.getItemAt(box_uf.getSelectedIndex()));
+		f.setNome(field_nome.getText());
+		f.setEmail(field_email.getText());
+		f.setCelular(field_celular.getText());
+		f.setTelefone(field_telefone.getText());
+		f.setCpf(field_cpf.getText());
+		f.setRg(field_rg.getText());
+		f.setCep(field_cep.getText());
+		f.setEndereco(field_endereco.getText());
+		f.setComplemento(field_compl.getText());
+		f.setNumero(Integer.parseInt(field_numero.getText()));
+		f.setBairro(field_bairro.getText());
+		f.setCidade(field_cidade.getText());
+		f.setEstado(box_uf.getItemAt(box_uf.getSelectedIndex()));
+		f.setCargo(field_cargo.getText());
+		f.setNivel_acesso(box_nivelAcesso.getItemAt(box_nivelAcesso.getSelectedIndex()));
 		
-		dao_cliente.alterar(c);
+		dao_func.alterar(f);
 		limparFormulario();
-		JOptionPane.showMessageDialog(FrmClientes,"Usuário: "+ c.getNome()+"\nDados atualizados!");
+		JOptionPane.showMessageDialog(FrmFuncionarios,"Funcionário: "+ f.getNome()+"\nDados atualizados!");
 	}
 	
-	public void excluirCliente() {
-		Cliente c = new Cliente();
-		DAO<Cliente> dao_cliente = new DAO<>(Cliente.class);
+	public void excluirFunc() {
+		Funcionario f = new Funcionario();
+		DAO<Funcionario> dao_func = new DAO<>(Funcionario.class);
 		Integer parametro = Integer.parseInt(field_codigo.getText());
 		
-		c = dao_cliente.consultar("consultarPorId","id",parametro).get(0);
+		f = dao_func.consultar("consultarFuncPorId","id",parametro).get(0);
 		
-		dao_cliente.excluir(c);
+		dao_func.excluir(f);
 		limparFormulario();
-		JOptionPane.showMessageDialog(FrmClientes,"Usuário: "+ c.getNome()+"\nDados excluídos!");
+		JOptionPane.showMessageDialog(FrmFuncionarios,"Usuário: "+ f.getNome()+"\nDados excluídos!");
 	}
 	
-	  public Cliente buscaCep(String cep) {
-	       
-	        WebServiceCep webServiceCep = WebServiceCep.searchCep(cep);
-	       
-
-	        Cliente obj = new Cliente();
-
-	        if (webServiceCep.wasSuccessful()) {
-	            obj.setEndereco(webServiceCep.getLogradouroFull());
-	            obj.setCidade(webServiceCep.getCidade());
-	            obj.setBairro(webServiceCep.getBairro());
-	            obj.setEstado(webServiceCep.getEstado());
-	            return obj;
-	        } else {
-	            JOptionPane.showMessageDialog(null, "Erro numero: " + webServiceCep.getResulCode());
-	            JOptionPane.showMessageDialog(null, "Descrição do erro: " + webServiceCep.getResultText());
-	            return null;
-	        }
-
-	    }
-		
-		
-	
+//	  public Funcionario buscaCep(String cep) {
+//	       
+//	        WebServiceCep webServiceCep = WebServiceCep.searchCep(cep);
+//	       
+//
+//	        Funcionario obj = new Funcionario();
+//
+//	        if (webServiceCep.wasSuccessful()) {
+//	            obj.setEndereco(webServiceCep.getLogradouroFull());
+//	            obj.setCidade(webServiceCep.getCidade());
+//	            obj.setBairro(webServiceCep.getBairro());
+//	            obj.setEstado(webServiceCep.getEstado());
+//	            return obj;
+//	        } else {
+//	            JOptionPane.showMessageDialog(null, "Erro numero: " + webServiceCep.getResulCode());
+//	            JOptionPane.showMessageDialog(null, "Descrição do erro: " + webServiceCep.getResultText());
+//	            return null;
+//	        }
+//
+//	    }
 }//FimJanela

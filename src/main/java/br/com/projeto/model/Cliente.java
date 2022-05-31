@@ -1,9 +1,14 @@
 package br.com.projeto.model;
 
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorType;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 
@@ -16,8 +21,18 @@ import javax.persistence.NamedQuery;
 		
 		//seleciona a partir do Id
 		@NamedQuery(name = "consultarPorId",
-		query = "select c from Cliente c where c.id = :id")
+		query = "select c from Cliente c where c.id = :id"),
+		
+		@NamedQuery(name = "consultarFuncPorNome",
+		query ="select f from Funcionario f where f.nome like :nome"),
+		
+		//seleciona a partir do Id
+		@NamedQuery(name = "consultarFuncPorId",
+		query = "select f from Funcionario f where f.id = :id")
 })
+@Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name = "Pessoa",discriminatorType = DiscriminatorType.STRING)
+@DiscriminatorValue(value = "Cliente")
 public class Cliente {
 	  
 	@Id
