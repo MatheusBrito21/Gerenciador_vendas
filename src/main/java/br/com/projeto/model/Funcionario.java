@@ -1,10 +1,9 @@
 package br.com.projeto.model;
 
-import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
 @Entity
-@DiscriminatorValue(value = "Funcionario")
+
 
 public class Funcionario extends Cliente {
 	

@@ -1,8 +1,5 @@
 package br.com.projeto.model;
 
-import javax.persistence.DiscriminatorColumn;
-import javax.persistence.DiscriminatorType;
-import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -28,11 +25,17 @@ import javax.persistence.NamedQuery;
 		
 		//seleciona a partir do Id
 		@NamedQuery(name = "consultarFuncPorId",
-		query = "select f from Funcionario f where f.id = :id")
+		query = "select f from Funcionario f where f.id = :id"),
+		
+		//seleciona a partir do Id
+		@NamedQuery(name = "consultarFuncPorEmail",
+		query = "select c.email, f.senha from Funcionario f inner join Cliente c "
+				+ "where c.email = :email and f.senha = :senha"),
+		
+		
 })
 @Inheritance(strategy = InheritanceType.JOINED)
-@DiscriminatorColumn(name = "Pessoa",discriminatorType = DiscriminatorType.STRING)
-@DiscriminatorValue(value = "Cliente")
+
 public class Cliente {
 	  
 	@Id

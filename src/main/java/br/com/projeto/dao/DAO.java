@@ -33,7 +33,7 @@ public class DAO<E> {
 
 	}
 	
-	public DAO<E> teste() {
+	public DAO<E> conectar() {
 		return this;
 	}
 	
@@ -93,7 +93,13 @@ public class DAO<E> {
 	}
 	
 	
-	
+//	public boolean autenticarLogin(String email,char[] senha){
+//			String jpql = "select c.email, f.senha from Funcionario f inner join Cliente c "
+//			 + "where c.email = '"+email+"'and f.senha = '"+senha.toString()+"'";
+//			Query query = em.createQuery(jpql);
+//			
+//		return query.getResultList().isEmpty();
+//	}
 	
 	
 }
