@@ -30,7 +30,6 @@ public class DAO<E> {
 	public DAO(Class<E> classe) {
 		this.classe = classe;
 		em = emf.createEntityManager();
-
 	}
 	
 	public DAO<E> conectar() {
@@ -86,20 +85,14 @@ public class DAO<E> {
 	public List<E> consultar(String nomeConsulta, Object... params){
 		TypedQuery<E> query = em.createNamedQuery(nomeConsulta, classe);
 		
+		
 		for(int i = 0; i<params.length; i+=2) {
 			query.setParameter(params[i].toString(),params[i+1]);
+			
+			//["nome", var1, "senha", var2]
 		}
 		return query.getResultList();
 	}
-	
-	
-//	public boolean autenticarLogin(String email,char[] senha){
-//			String jpql = "select c.email, f.senha from Funcionario f inner join Cliente c "
-//			 + "where c.email = '"+email+"'and f.senha = '"+senha.toString()+"'";
-//			Query query = em.createQuery(jpql);
-//			
-//		return query.getResultList().isEmpty();
-//	}
 	
 	
 }

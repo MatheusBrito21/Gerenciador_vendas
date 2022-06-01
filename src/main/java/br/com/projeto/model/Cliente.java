@@ -29,11 +29,9 @@ import javax.persistence.NamedQuery;
 		
 		//seleciona a partir do Id
 		@NamedQuery(name = "consultarFuncPorEmail",
-		query = "select c.email, f.senha from Funcionario f inner join Cliente c "
-				+ "where c.email = :email and f.senha = :senha"),
-		
-		
+		query = "select f from Funcionario f where f.email = :email"),
 })
+
 @Inheritance(strategy = InheritanceType.JOINED)
 
 public class Cliente {

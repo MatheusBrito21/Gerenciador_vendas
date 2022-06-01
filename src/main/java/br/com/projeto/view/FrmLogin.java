@@ -4,14 +4,20 @@ import java.awt.Font;
 import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+
+import br.com.projeto.dao.DAO;
+import br.com.projeto.model.Funcionario;
 
 @SuppressWarnings("serial")
 public class FrmLogin extends JFrame {
@@ -85,7 +91,19 @@ public class FrmLogin extends JFrame {
 	}
 	
 	public void autenticarLogin() {
+		DAO<Funcionario> dao_func = new DAO<>(Funcionario.class);
 		
+		String email = field_log_email.getText();
+		char[] senha = field_log_senha.getPassword();
+		
+		List<Funcionario> f_busca_email = dao_func.consultar("consultarFuncPorEmail","email",email);
+		for(Funcionario f: f_busca_email) {
+			if(Arrays.equals(f.getSenha(), senha)) {
+				JOptionPane.showMessageDialog(null, "Login autenticado com sucesso!");
+			}else {
+				JOptionPane.showMessageDialog(null, "Falha!");
+			}
+		}
 		
 	}
 	
