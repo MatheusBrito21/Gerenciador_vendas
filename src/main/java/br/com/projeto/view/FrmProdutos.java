@@ -36,11 +36,11 @@ public class FrmProdutos extends JFrame {
 
 	private JPanel FrmProdutos;
 	private JTextField field_codigo;
-	private JTextField field_nome;
-	private JTextField field_bairro;
-	private JTextField field_cidade;
+	private JTextField field_nome_prod;
+	private JTextField field_preco;
+	private JTextField field_qtd_estoque;
 	private JTextField field_consul_nome;
-	private JComboBox<String> box_uf;
+	private JComboBox<String> box_fornecedor;
 	
 
 	private JTable tabelaProdutos;
@@ -106,40 +106,40 @@ public class FrmProdutos extends JFrame {
 		lb_nomeProd.setBounds(35, 75, 46, 21);
 		DadosPessoais.add(lb_nomeProd);
 		
-		field_nome = new JTextField();
-		field_nome.setColumns(10);
-		field_nome.setBounds(78, 75, 253, 20);
-		DadosPessoais.add(field_nome);
+		field_nome_prod = new JTextField();
+		field_nome_prod.setColumns(10);
+		field_nome_prod.setBounds(78, 75, 253, 20);
+		DadosPessoais.add(field_nome_prod);
 		
 		JLabel lb_preco = new JLabel("Preço:");
 		lb_preco.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		lb_preco.setBounds(35, 118, 58, 21);
 		DadosPessoais.add(lb_preco);
 		
-		field_bairro = new JTextField();
-		field_bairro.setColumns(10);
-		field_bairro.setBounds(78, 118, 99, 20);
-		DadosPessoais.add(field_bairro);
+		field_preco = new JTextField();
+		field_preco.setColumns(10);
+		field_preco.setBounds(78, 118, 99, 20);
+		DadosPessoais.add(field_preco);
 		
 		JLabel lb_qtd_estoque = new JLabel("Qtd.Estoque:");
 		lb_qtd_estoque.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		lb_qtd_estoque.setBounds(187, 118, 86, 21);
 		DadosPessoais.add(lb_qtd_estoque);
 		
-		field_cidade = new JTextField();
-		field_cidade.setColumns(10);
-		field_cidade.setBounds(268, 119, 114, 20);
-		DadosPessoais.add(field_cidade);
+		field_qtd_estoque = new JTextField();
+		field_qtd_estoque.setColumns(10);
+		field_qtd_estoque.setBounds(268, 119, 114, 20);
+		DadosPessoais.add(field_qtd_estoque);
 		
 		JLabel lb_fornecedor = new JLabel("Fornecedor:");
 		lb_fornecedor.setBounds(35, 160, 59, 21);
 		DadosPessoais.add(lb_fornecedor);
 		
-		box_uf = new JComboBox<String>();
-		box_uf.setModel(new DefaultComboBoxModel<String>(new String[] {"\u00A0AC", "\u00A0AL", "\u00A0AP", "\u00A0AM", "\u00A0BA", "\u00A0CE", "\u00A0DF", "\u00A0ES", "\u00A0GO", "\u00A0MA", "\u00A0MT", "\u00A0MS", "\u00A0MG", "\u00A0PA", "\u00A0PB", "\u00A0PR", "\u00A0PE", "\u00A0PI", "\u00A0RJ", "\u00A0RN", "\u00A0RS", "\u00A0RO", "\u00A0RR", "\u00A0SC", "\u00A0SP", "\u00A0SE", "\u00A0TO"}));
-		box_uf.setSelectedIndex(0);
-		box_uf.setBounds(104, 160, 227, 22);
-		DadosPessoais.add(box_uf);
+		box_fornecedor = new JComboBox<String>();
+		box_fornecedor.setModel(new DefaultComboBoxModel(new String[] {"Fornecedor 1 ", "Fornecedor 2", "Fornecedor 3", "Fornecedor 4"}));
+		box_fornecedor.setSelectedIndex(0);
+		box_fornecedor.setBounds(104, 160, 227, 22);
+		DadosPessoais.add(box_fornecedor);
 		
 		
 		JPanel ConsultarCliente = new JPanel();
@@ -165,10 +165,10 @@ public class FrmProdutos extends JFrame {
 				janelas.setSelectedIndex(0);
 				
 				 field_codigo.setText( tabelaProdutos.getValueAt(tabelaProdutos.getSelectedRow(),0).toString());
-				 field_nome.setText((String) tabelaProdutos.getValueAt(tabelaProdutos.getSelectedRow(),1).toString());
-				 field_bairro.setText((String) tabelaProdutos.getValueAt(tabelaProdutos.getSelectedRow(),11).toString());
-				 field_cidade.setText((String) tabelaProdutos.getValueAt(tabelaProdutos.getSelectedRow(),12).toString());
-				 box_uf.setSelectedItem(tabelaProdutos.getValueAt(tabelaProdutos.getSelectedRow(), 13).toString());
+				 field_nome_prod.setText((String) tabelaProdutos.getValueAt(tabelaProdutos.getSelectedRow(),1).toString());
+				 field_preco.setText((String) tabelaProdutos.getValueAt(tabelaProdutos.getSelectedRow(),11).toString());
+				 field_qtd_estoque.setText((String) tabelaProdutos.getValueAt(tabelaProdutos.getSelectedRow(),12).toString());
+				 box_fornecedor.setSelectedItem(tabelaProdutos.getValueAt(tabelaProdutos.getSelectedRow(), 13).toString());
 				
 			}
 		});
@@ -256,9 +256,9 @@ public class FrmProdutos extends JFrame {
 	//botao Novo
 	public void limparFormulario() {
 		 field_codigo.setText("");
-		 field_nome.setText("");
-		 field_bairro.setText("");
-		 field_cidade.setText("");
+		 field_nome_prod.setText("");
+		 field_preco.setText("");
+		 field_qtd_estoque.setText("");
 		 field_consul_nome.setText("");
 		 
 		 tabelaProdutos.clearSelection();
@@ -267,10 +267,10 @@ public class FrmProdutos extends JFrame {
 	public void cadastrarCliente() {
 		Cliente c = new Cliente();
 		DAO<Cliente> dao_cliente = new DAO<>(Cliente.class);
-			c.setNome(field_nome.getText());
-			c.setBairro(field_bairro.getText());
-			c.setCidade(field_cidade.getText());
-			c.setEstado(box_uf.getItemAt(box_uf.getSelectedIndex()));
+			c.setNome(field_nome_prod.getText());
+			c.setBairro(field_preco.getText());
+			c.setCidade(field_qtd_estoque.getText());
+			c.setEstado(box_fornecedor.getItemAt(box_fornecedor.getSelectedIndex()));
 			
 		dao_cliente.incluirAtomico(c);
 		JOptionPane.showMessageDialog(FrmProdutos,"Novo usuário cadastrado!\nNome: "+ c.getNome());
@@ -314,10 +314,10 @@ public class FrmProdutos extends JFrame {
 		
 		c = dao_cliente.consultar("consultarPorId","id",parametro).get(0);
 		
-		c.setNome(field_nome.getText());
-		c.setBairro(field_bairro.getText());
-		c.setCidade(field_cidade.getText());
-		c.setEstado(box_uf.getItemAt(box_uf.getSelectedIndex()));
+		c.setNome(field_nome_prod.getText());
+		c.setBairro(field_preco.getText());
+		c.setCidade(field_qtd_estoque.getText());
+		c.setEstado(box_fornecedor.getItemAt(box_fornecedor.getSelectedIndex()));
 		
 		dao_cliente.alterar(c);
 		limparFormulario();
