@@ -18,6 +18,8 @@ import javax.swing.border.EmptyBorder;
 
 import br.com.projeto.dao.DAO;
 import br.com.projeto.model.Funcionario;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 @SuppressWarnings("serial")
 public class FrmLogin extends JFrame {
@@ -28,6 +30,7 @@ public class FrmLogin extends JFrame {
 	public FrmLogin() {
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setLocationRelativeTo(null);
 		setBounds(100, 100, 583, 396);
 		Login = new JPanel();
 		Login.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -80,13 +83,13 @@ public class FrmLogin extends JFrame {
 		Login.add(bt_entrar);
 		
 		JButton bt_sair = new JButton("Sair");
-		bt_sair.setBounds(275, 323, 89, 23);
-		bt_sair.addActionListener(new ActionListener() {
-			
-			public void actionPerformed(ActionEvent e) {
+		bt_sair.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
 				dispose();
 			}
 		});
+		bt_sair.setBounds(275, 323, 89, 23);
 		Login.add(bt_sair);
 	}
 	
@@ -97,14 +100,23 @@ public class FrmLogin extends JFrame {
 		char[] senha = field_log_senha.getPassword();
 		
 		List<Funcionario> f_busca_email = dao_func.consultar("consultarFuncPorEmail","email",email);
-		for(Funcionario f: f_busca_email) {
-			if(Arrays.equals(f.getSenha(), senha)) {
-				JOptionPane.showMessageDialog(null, "Login autenticado com sucesso!");
-			}else {
-				JOptionPane.showMessageDialog(null, "Falha!");
-			}
-		}
-		
+		if (!f_busca_email.isEmpty()) {
+			for (Funcionario f : f_busca_email) {
+				if (Arrays.equals(f.getSenha(), senha)) {
+					JOptionPane.showMessageDialog(null, "Login autenticado com sucesso!");
+					FrmMenu menu = new FrmMenu();
+					menu.setVisible(true);
+					menu.lb_usuarioConectado.setText(f.getNome());
+					menu.lb_nivel_acesso.setText(f.getNivel_acesso().toString());
+
+					this.dispose();
+				} else {
+					JOptionPane.showMessageDialog(null, "Dados incorretos!");
+				}
+			} 
+		}else {
+			JOptionPane.showMessageDialog(null, "Nenhum resultado encontrado!");
+		}		
 	}
 	
 	

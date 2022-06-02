@@ -2,7 +2,7 @@ package br.com.projeto.view;
 
 import java.text.ParseException;
 
-public class TesteTela {
+public class Iniciar {
 
     public static void main(String[] args) throws ParseException {
 //        FrmFuncionarios janela2 = new FrmFuncionarios();
@@ -10,11 +10,13 @@ public class TesteTela {
         
 //        FrmClientes janela = new FrmClientes();
 //        janela.setVisible(true);
-        
+//        
         FrmLogin janelaLog = new FrmLogin();
         janelaLog.setVisible(true);
         
-        
+//        FrmMenu menu = new FrmMenu();
+//        menu.setVisible(true);
+//        
         
         
         

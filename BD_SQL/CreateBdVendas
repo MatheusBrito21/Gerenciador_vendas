@@ -83,7 +83,7 @@ CREATE TABLE tb_produtos (
 );
 /*****************/
 
-/***** TABELA COMPRAS *****/
+/***** TABELA VENDAS *****/
 CREATE TABLE tb_vendas (
   id int auto_increment primary key,
   cliente_id int,
