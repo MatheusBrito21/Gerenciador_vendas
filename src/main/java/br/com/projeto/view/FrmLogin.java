@@ -28,9 +28,9 @@ public class FrmLogin extends JFrame {
 	private JPasswordField field_log_senha;
 	
 	public FrmLogin() {
+		setLocationRelativeTo(null);
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setLocationRelativeTo(null);
 		setBounds(100, 100, 583, 396);
 		Login = new JPanel();
 		Login.setBorder(new EmptyBorder(5, 5, 5, 5));

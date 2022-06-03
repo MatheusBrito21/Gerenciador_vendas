@@ -132,13 +132,13 @@ public class FrmProdutos extends JFrame {
 		DadosPessoais.add(field_qtd_estoque);
 		
 		JLabel lb_fornecedor = new JLabel("Fornecedor:");
-		lb_fornecedor.setBounds(35, 160, 59, 21);
+		lb_fornecedor.setBounds(35, 160, 86, 21);
 		DadosPessoais.add(lb_fornecedor);
 		
 		box_fornecedor = new JComboBox<String>();
-		box_fornecedor.setModel(new DefaultComboBoxModel(new String[] {"Fornecedor 1 ", "Fornecedor 2", "Fornecedor 3", "Fornecedor 4"}));
+		box_fornecedor.setModel(new DefaultComboBoxModel<String>(new String[] {"Fornecedor 1 ", "Fornecedor 2", "Fornecedor 3", "Fornecedor 4"}));
 		box_fornecedor.setSelectedIndex(0);
-		box_fornecedor.setBounds(104, 160, 227, 22);
+		box_fornecedor.setBounds(119, 160, 212, 22);
 		DadosPessoais.add(box_fornecedor);
 		
 		

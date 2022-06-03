@@ -27,7 +27,7 @@ public class FrmMenu extends JFrame {
 	JLabel lb_nivel_acesso;
 	
 
-	ImageIcon icon = new ImageIcon(getClass().getResource("/images/fundo.jpg"));
+	ImageIcon icon = new ImageIcon(getClass().getResource("/images/fundo2.jpg"));
 	Image image = icon.getImage();
 	
 	private final JDesktopPane desktopPane = new JDesktopPane() {
@@ -44,6 +44,7 @@ public class FrmMenu extends JFrame {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(FrmMenu.class.getResource("/images/vendas.png")));
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 800, 600);
+		setResizable(false);
 		setLocationRelativeTo(null);
 		
 		JMenuBar barra_menu = new JMenuBar();
@@ -58,6 +59,7 @@ public class FrmMenu extends JFrame {
 				try {
 					janelaClientes = new FrmClientes();
 					janelaClientes.setVisible(true);
+					janelaClientes.setLocationRelativeTo(null);
 				} catch (ParseException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -76,6 +78,7 @@ public class FrmMenu extends JFrame {
 				try {
 					janelaFuncionarios = new FrmFuncionarios();
 					janelaFuncionarios.setVisible(true);
+					janelaFuncionarios.setLocationRelativeTo(null);
 				} catch (ParseException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -86,12 +89,53 @@ public class FrmMenu extends JFrame {
 		barra_menu.add(menu_funcionarios);
 		
 		JMenuItem menu_fornecedor = new JMenuItem("Fornecedores");
+		menu_fornecedor.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				FrmFornecedores janelaFornecedores;
+				try {
+					janelaFornecedores = new FrmFornecedores();
+					janelaFornecedores.setVisible(true);
+					janelaFornecedores.setLocationRelativeTo(null);
+				} catch (ParseException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
 		barra_menu.add(menu_fornecedor);
 		
 		JMenuItem menu_produtos = new JMenuItem("Produtos");
+		menu_produtos.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				FrmProdutos janelaProdutos;
+				try {
+					janelaProdutos = new FrmProdutos();
+					janelaProdutos.setVisible(true);
+					janelaProdutos.setLocationRelativeTo(null);
+				} catch (ParseException e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
 		barra_menu.add(menu_produtos);
 		
 		JMenuItem menu_vendas = new JMenuItem("Vendas");
+		menu_vendas.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				FrmVendas janelaVendas;
+				try {
+					janelaVendas = new FrmVendas();
+					janelaVendas.setVisible(true);
+					janelaVendas.setLocationRelativeTo(null);
+				} catch (ParseException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
 		barra_menu.add(menu_vendas);
 		
 		JMenu menu_config = new JMenu("Configurações");

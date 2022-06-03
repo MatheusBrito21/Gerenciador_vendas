@@ -13,6 +13,7 @@ public class Iniciar {
 //        
         FrmLogin janelaLog = new FrmLogin();
         janelaLog.setVisible(true);
+        janelaLog.setLocationRelativeTo(null);
         
 //        FrmMenu menu = new FrmMenu();
 //        menu.setVisible(true);
