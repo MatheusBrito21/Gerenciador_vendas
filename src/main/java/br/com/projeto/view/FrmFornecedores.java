@@ -30,12 +30,12 @@ import javax.swing.table.TableModel;
 import javax.swing.text.MaskFormatter;
 
 import br.com.projeto.dao.DAO;
-import br.com.projeto.model.Cliente;
+import br.com.projeto.model.Fornecedor;
 
 @SuppressWarnings("serial")
 public class FrmFornecedores extends JFrame {
 
-	private JPanel FrmClientes;
+	private JPanel FrmFornecedor;
 	private JTextField field_codigo;
 	private JTextField field_nome;
 	private JTextField field_email;
@@ -62,15 +62,15 @@ public class FrmFornecedores extends JFrame {
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 761, 606);
-		FrmClientes = new JPanel();
-		FrmClientes.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setContentPane(FrmClientes);
-		FrmClientes.setLayout(null);
+		FrmFornecedor = new JPanel();
+		FrmFornecedor.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(FrmFornecedor);
+		FrmFornecedor.setLayout(null);
 		
 		JPanel panel = new JPanel();
 		panel.setBackground(SystemColor.textHighlight);
 		panel.setBounds(5, 5, 735, 68);
-		FrmClientes.add(panel);
+		FrmFornecedor.add(panel);
 		panel.setLayout(null);
 		
 		JLabel titulo = new JLabel("Cadastro de Fornecedores");
@@ -83,7 +83,7 @@ public class FrmFornecedores extends JFrame {
 		
 		JTabbedPane janelas = new JTabbedPane(JTabbedPane.TOP);
 		janelas.setBounds(15, 84, 720, 424);
-		FrmClientes.add(janelas);
+		FrmFornecedor.add(janelas);
 		
 		
 		MaskFormatter formatTextCelField = new MaskFormatter("(##) #####-####");
@@ -258,14 +258,13 @@ public class FrmFornecedores extends JFrame {
 				 field_celular.setText((String) tabelaFornecedores.getValueAt(tabelaFornecedores.getSelectedRow(),3).toString());
 				 field_telefone.setText((String) tabelaFornecedores.getValueAt(tabelaFornecedores.getSelectedRow(),4).toString());
 				 field_cnpj.setText((String) tabelaFornecedores.getValueAt(tabelaFornecedores.getSelectedRow(),5).toString());
-//				 field_rg.setText((String) tabelaClientes.getValueAt(tabelaClientes.getSelectedRow(),6).toString());
-				 field_cep.setText((String) tabelaFornecedores.getValueAt(tabelaFornecedores.getSelectedRow(),7).toString());
-				 field_endereco.setText((String) tabelaFornecedores.getValueAt(tabelaFornecedores.getSelectedRow(),8).toString());
-				 field_numero.setText((String) tabelaFornecedores.getValueAt(tabelaFornecedores.getSelectedRow(),9).toString());
-				 field_compl.setText((String) tabelaFornecedores.getValueAt(tabelaFornecedores.getSelectedRow(),10).toString());
-				 field_bairro.setText((String) tabelaFornecedores.getValueAt(tabelaFornecedores.getSelectedRow(),11).toString());
-				 field_cidade.setText((String) tabelaFornecedores.getValueAt(tabelaFornecedores.getSelectedRow(),12).toString());
-				 box_uf.setSelectedItem(tabelaFornecedores.getValueAt(tabelaFornecedores.getSelectedRow(), 13).toString());
+				 field_cep.setText((String) tabelaFornecedores.getValueAt(tabelaFornecedores.getSelectedRow(),6).toString());
+				 field_endereco.setText((String) tabelaFornecedores.getValueAt(tabelaFornecedores.getSelectedRow(),7).toString());
+				 field_numero.setText((String) tabelaFornecedores.getValueAt(tabelaFornecedores.getSelectedRow(),8).toString());
+				 field_compl.setText((String) tabelaFornecedores.getValueAt(tabelaFornecedores.getSelectedRow(),9).toString());
+				 field_bairro.setText((String) tabelaFornecedores.getValueAt(tabelaFornecedores.getSelectedRow(),10).toString());
+				 field_cidade.setText((String) tabelaFornecedores.getValueAt(tabelaFornecedores.getSelectedRow(),11).toString());
+				 box_uf.setSelectedItem(tabelaFornecedores.getValueAt(tabelaFornecedores.getSelectedRow(), 12).toString());
 				
 			}
 		});
@@ -295,7 +294,7 @@ public class FrmFornecedores extends JFrame {
 		bt_pesquisar.setBounds(335, 47, 103, 23);
 		bt_pesquisar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				listarClientes();
+				listarFornecedores();
 			}
 		});
 		ConsultarCliente.add(bt_pesquisar);
@@ -312,16 +311,16 @@ public class FrmFornecedores extends JFrame {
 			}
 		});
 		bt_novo.setBounds(25, 519, 89, 23);
-		FrmClientes.add(bt_novo);
+		FrmFornecedor.add(bt_novo);
 		
-		JButton bt_salvar = new JButton("Cadastrar");
-		bt_salvar.setBounds(124, 519, 102, 23);
-		bt_salvar.addActionListener(new ActionListener() {
+		JButton bt_cadastrar = new JButton("Cadastrar");
+		bt_cadastrar.setBounds(124, 519, 102, 23);
+		bt_cadastrar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				cadastrarCliente();
+				cadastrarFornecedor();
 			}
 		});
-		FrmClientes.add(bt_salvar);
+		FrmFornecedor.add(bt_cadastrar);
 		
 		JButton bt_editar = new JButton("Alterar");
 		bt_editar.setBounds(233, 519, 89, 23);
@@ -330,17 +329,17 @@ public class FrmFornecedores extends JFrame {
 				alterarCliente();
 			}
 		});
-		FrmClientes.add(bt_editar);
+		FrmFornecedor.add(bt_editar);
 		
 		JButton bt_excluir = new JButton("Excluir");
 		bt_excluir.setBounds(333, 519, 89, 23);
 		bt_excluir.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e) {
-				excluirCliente();
+				excluirFornecedor();
 			}
 		});
-		FrmClientes.add(bt_excluir);
+		FrmFornecedor.add(bt_excluir);
 		
 		
 		
@@ -371,92 +370,91 @@ public class FrmFornecedores extends JFrame {
 		 tabelaFornecedores.clearSelection();
 	};
 	
-	public void cadastrarCliente() {
-		Cliente c = new Cliente();
-		DAO<Cliente> dao_cliente = new DAO<>(Cliente.class);
-			c.setNome(field_nome.getText());
-			c.setEmail(field_email.getText());
-			c.setCelular(field_celular.getText());
-			c.setTelefone(field_telefone.getText());
-			c.setCpf(field_cnpj.getText());
-			c.setCep(field_cep.getText());
-			c.setEndereco(field_endereco.getText());
-			c.setComplemento(field_compl.getText());
-			c.setNumero(Integer.parseInt(field_numero.getText()));
-			c.setBairro(field_bairro.getText());
-			c.setCidade(field_cidade.getText());
-			c.setEstado(box_uf.getItemAt(box_uf.getSelectedIndex()));
+	public void cadastrarFornecedor() {
+		Fornecedor f = new Fornecedor();
+		DAO<Fornecedor> dao_cliente = new DAO<>(Fornecedor.class);
+			f.setNome(field_nome.getText());
+			f.setEmail(field_email.getText());
+			f.setCelular(field_celular.getText());
+			f.setTelefone(field_telefone.getText());
+			f.setCnpj(field_cnpj.getText());
+			f.setCep(field_cep.getText());
+			f.setEndereco(field_endereco.getText());
+			f.setComplemento(field_compl.getText());
+			f.setNumero(Integer.parseInt(field_numero.getText()));
+			f.setBairro(field_bairro.getText());
+			f.setCidade(field_cidade.getText());
+			f.setEstado(box_uf.getItemAt(box_uf.getSelectedIndex()));
 			
-		dao_cliente.incluirAtomico(c);
-		JOptionPane.showMessageDialog(FrmClientes,"Novo usuário cadastrado!\nNome: "+ c.getNome());
+		dao_cliente.incluirAtomico(f);
+		JOptionPane.showMessageDialog(FrmFornecedor,"Novo Fornecedor cadastrado!\nNome: "+ f.getNome());
 	}
 	
-	public void listarClientes() {
-		DAO<Cliente> dao_cliente = new DAO<>(Cliente.class);
+	public void listarFornecedores() {
+		DAO<Fornecedor> dao_fornc = new DAO<>(Fornecedor.class);
 		String parametro = field_consul_nome.getText()+"%";
 		
-		List<Cliente> lista = dao_cliente
-			.consultar("consultarPorNome","nome", parametro);
+		List<Fornecedor> lista = dao_fornc
+			.consultar("consultarFornPorNome","nome", parametro);
 		
 		DefaultTableModel dados_tabela = (DefaultTableModel) tabelaFornecedores.getModel();
 		//limpa a tabela
 		dados_tabela.setNumRows(0);
 		
-		for(Cliente c: lista) {
+		for(Fornecedor f: lista) {
 			dados_tabela.addRow(new Object[]{
-					c.getId(),
-					c.getNome(),
-					c.getEmail(),
-					c.getCelular(),
-					c.getTelefone(),
-					c.getCpf(),
-					c.getRg(),
-					c.getCep(),
-					c.getEndereco(),
-					c.getNumero(),
-					c.getComplemento(),
-					c.getBairro(),
-					c.getCidade(),
-					c.getEstado()
+					f.getId(),
+					f.getNome(),
+					f.getEmail(),
+					f.getCelular(),
+					f.getTelefone(),
+					f.getCnpj(),
+					f.getCep(),
+					f.getEndereco(),
+					f.getNumero(),
+					f.getComplemento(),
+					f.getBairro(),
+					f.getCidade(),
+					f.getEstado()
 			});
 		}
 	}
 	
 	public void alterarCliente() {
-		Cliente c = new Cliente();
-		DAO<Cliente> dao_cliente = new DAO<>(Cliente.class);
+		Fornecedor f = new Fornecedor();
+		DAO<Fornecedor> dao_forn = new DAO<>(Fornecedor.class);
 		Integer parametro = Integer.parseInt(field_codigo.getText());
 		
-		c = dao_cliente.consultar("consultarPorId","id",parametro).get(0);
+		f = dao_forn.consultar("consultarFornPorId","id",parametro).get(0);
 		
-		c.setNome(field_nome.getText());
-		c.setEmail(field_email.getText());
-		c.setCelular(field_celular.getText());
-		c.setTelefone(field_telefone.getText());
-		c.setCpf(field_cnpj.getText());
-		c.setCep(field_cep.getText());
-		c.setEndereco(field_endereco.getText());
-		c.setComplemento(field_compl.getText());
-		c.setNumero(Integer.parseInt(field_numero.getText()));
-		c.setBairro(field_bairro.getText());
-		c.setCidade(field_cidade.getText());
-		c.setEstado(box_uf.getItemAt(box_uf.getSelectedIndex()));
+		f.setNome(field_nome.getText());
+		f.setEmail(field_email.getText());
+		f.setCelular(field_celular.getText());
+		f.setTelefone(field_telefone.getText());
+		f.setCnpj(field_cnpj.getText());
+		f.setCep(field_cep.getText());
+		f.setEndereco(field_endereco.getText());
+		f.setComplemento(field_compl.getText());
+		f.setNumero(Integer.parseInt(field_numero.getText()));
+		f.setBairro(field_bairro.getText());
+		f.setCidade(field_cidade.getText());
+		f.setEstado(box_uf.getItemAt(box_uf.getSelectedIndex()));
 		
-		dao_cliente.alterar(c);
+		dao_forn.alterar(f);
 		limparFormulario();
-		JOptionPane.showMessageDialog(FrmClientes,"Usuário: "+ c.getNome()+"\nDados atualizados!");
+		JOptionPane.showMessageDialog(FrmFornecedor,"Fornecedor: "+ f.getNome()+"\nDados atualizados!");
 	}
 	
-	public void excluirCliente() {
-		Cliente c = new Cliente();
-		DAO<Cliente> dao_cliente = new DAO<>(Cliente.class);
+	public void excluirFornecedor() {
+		Fornecedor c = new Fornecedor();
+		DAO<Fornecedor> dao_cliente = new DAO<>(Fornecedor.class);
 		Integer parametro = Integer.parseInt(field_codigo.getText());
 		
-		c = dao_cliente.consultar("consultarPorId","id",parametro).get(0);
+		c = dao_cliente.consultar("consultarFornPorId","id",parametro).get(0);
 		
 		dao_cliente.excluir(c);
 		limparFormulario();
-		JOptionPane.showMessageDialog(FrmClientes,"Usuário: "+ c.getNome()+"\nDados excluídos!");
+		JOptionPane.showMessageDialog(FrmFornecedor,"Fornecedor: "+ c.getNome()+"\nDados excluídos!");
 	}
 	
 //	  public Cliente buscaCep(String cep) {
