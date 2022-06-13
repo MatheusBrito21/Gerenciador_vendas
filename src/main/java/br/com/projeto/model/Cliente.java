@@ -195,10 +195,7 @@ public class Cliente {
 
 	@Override
 	public String toString() {
-		return "Cliente [nome=" + nome + ", rg=" + rg + ", cpf=" + cpf + ", email=" + email + ", telefone=" + telefone
-				+ ", celular=" + celular + ", cep=" + cep + ", endereco=" + endereco + ", numero=" + numero
-				+ ", complemento=" + complemento + ", bairro=" + bairro + ", cidade=" + cidade + ", estado=" + estado
-				+ "]";
+		return String.format("%s", this.getNome());
 	}
 	  
 	  

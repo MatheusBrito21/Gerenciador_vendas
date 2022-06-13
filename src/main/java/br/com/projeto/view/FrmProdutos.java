@@ -10,7 +10,6 @@ import java.awt.event.MouseEvent;
 import java.text.ParseException;
 import java.util.List;
 
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -28,8 +27,8 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
 import br.com.projeto.dao.DAO;
-import br.com.projeto.dao.WebServiceCep;
-import br.com.projeto.model.Cliente;
+import br.com.projeto.model.Fornecedor;
+import br.com.projeto.model.Produto;
 
 @SuppressWarnings("serial")
 public class FrmProdutos extends JFrame {
@@ -40,7 +39,7 @@ public class FrmProdutos extends JFrame {
 	private JTextField field_preco;
 	private JTextField field_qtd_estoque;
 	private JTextField field_consul_nome;
-	private JComboBox<String> box_fornecedor;
+	private JComboBox<Fornecedor> box_fornecedor;
 	
 
 	private JTable tabelaProdutos;
@@ -135,8 +134,11 @@ public class FrmProdutos extends JFrame {
 		lb_fornecedor.setBounds(35, 160, 86, 21);
 		DadosPessoais.add(lb_fornecedor);
 		
-		box_fornecedor = new JComboBox<String>();
-		box_fornecedor.setModel(new DefaultComboBoxModel<String>(new String[] {"Fornecedor 1 ", "Fornecedor 2", "Fornecedor 3", "Fornecedor 4"}));
+		box_fornecedor = new JComboBox<Fornecedor>();
+		box_fornecedor.removeAll();
+		for(Fornecedor f : listarFornecedor()) {
+			box_fornecedor.addItem(f);
+		}
 		box_fornecedor.setSelectedIndex(0);
 		box_fornecedor.setBounds(119, 160, 212, 22);
 		DadosPessoais.add(box_fornecedor);
@@ -166,9 +168,9 @@ public class FrmProdutos extends JFrame {
 				
 				 field_codigo.setText( tabelaProdutos.getValueAt(tabelaProdutos.getSelectedRow(),0).toString());
 				 field_nome_prod.setText((String) tabelaProdutos.getValueAt(tabelaProdutos.getSelectedRow(),1).toString());
-				 field_preco.setText((String) tabelaProdutos.getValueAt(tabelaProdutos.getSelectedRow(),11).toString());
-				 field_qtd_estoque.setText((String) tabelaProdutos.getValueAt(tabelaProdutos.getSelectedRow(),12).toString());
-				 box_fornecedor.setSelectedItem(tabelaProdutos.getValueAt(tabelaProdutos.getSelectedRow(), 13).toString());
+				 field_preco.setText((String) tabelaProdutos.getValueAt(tabelaProdutos.getSelectedRow(),2).toString());
+				 field_qtd_estoque.setText((String) tabelaProdutos.getValueAt(tabelaProdutos.getSelectedRow(),3).toString());
+				 box_fornecedor.setSelectedItem(tabelaProdutos.getValueAt(tabelaProdutos.getSelectedRow(), 4).toString());
 				
 			}
 		});
@@ -196,7 +198,7 @@ public class FrmProdutos extends JFrame {
 		bt_pesquisar.setBounds(335, 47, 103, 23);
 		bt_pesquisar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				listarClientes();
+				listarProdutos();
 			}
 		});
 		ConsultarCliente.add(bt_pesquisar);
@@ -219,7 +221,7 @@ public class FrmProdutos extends JFrame {
 		bt_salvar.setBounds(124, 519, 102, 23);
 		bt_salvar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				cadastrarCliente();
+				cadastrarProduto();
 			}
 		});
 		FrmProdutos.add(bt_salvar);
@@ -228,7 +230,7 @@ public class FrmProdutos extends JFrame {
 		bt_editar.setBounds(233, 519, 89, 23);
 		bt_editar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				alterarCliente();
+				alterarProduto();
 			}
 		});
 		FrmProdutos.add(bt_editar);
@@ -238,7 +240,7 @@ public class FrmProdutos extends JFrame {
 		bt_excluir.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e) {
-				excluirCliente();
+				excluirProduto();
 			}
 		});
 		FrmProdutos.add(bt_excluir);
@@ -264,98 +266,86 @@ public class FrmProdutos extends JFrame {
 		 tabelaProdutos.clearSelection();
 	};
 	
-	public void cadastrarCliente() {
-		Cliente c = new Cliente();
-		DAO<Cliente> dao_cliente = new DAO<>(Cliente.class);
-			c.setNome(field_nome_prod.getText());
-			c.setBairro(field_preco.getText());
-			c.setCidade(field_qtd_estoque.getText());
-			c.setEstado(box_fornecedor.getItemAt(box_fornecedor.getSelectedIndex()));
-			
-		dao_cliente.incluirAtomico(c);
-		JOptionPane.showMessageDialog(FrmProdutos,"Novo usuário cadastrado!\nNome: "+ c.getNome());
+	public List<Fornecedor> listarFornecedor() {
+		
+		DAO<Fornecedor> dao_f = new DAO<>(Fornecedor.class);
+		List<Fornecedor>lista_f = dao_f.abriT().obterTodosP();
+	
+		return lista_f;
 	}
 	
-	public void listarClientes() {
-		DAO<Cliente> dao_cliente = new DAO<>(Cliente.class);
+	public void cadastrarProduto() {
+		Produto p = new Produto();
+		DAO<Produto> dao_produto = new DAO<>(Produto.class);
+			p.setNome(field_nome_prod.getText());
+			
+			//converte o valor para o formato correto para Double
+			if(field_preco.getText().contains(",")) {
+				String preco_format = field_preco.getText().replace(",", ".");
+				p.setPreco(Double.parseDouble(preco_format));
+			}else {
+				p.setPreco(Double.parseDouble(field_preco.getText()));				
+			}
+			p.setQtd_estoque(Integer.parseInt(field_qtd_estoque.getText()));
+			p.setFornecedor((Fornecedor)box_fornecedor.getSelectedItem());
+			
+		dao_produto.incluirAtomico(p);
+		JOptionPane.showMessageDialog(FrmProdutos,"Novo produto cadastrado!\nNome: "+ p.getNome());
+	}
+	
+	public void listarProdutos() {
+		DAO<Produto> dao_prod = new DAO<>(Produto.class);
 		String parametro = field_consul_nome.getText()+"%";
 		
-		List<Cliente> lista = dao_cliente
-			.consultar("consultarPorNome","nome", parametro);
+		List<Produto> lista = dao_prod
+			.consultar("consultarProdPorNome","nome", parametro);
 		
 		DefaultTableModel dados_tabela = (DefaultTableModel) tabelaProdutos.getModel();
 		//limpa a tabela
 		dados_tabela.setNumRows(0);
 		
-		for(Cliente c: lista) {
+		for(Produto p: lista) {
 			dados_tabela.addRow(new Object[]{
-					c.getId(),
-					c.getNome(),
-					c.getEmail(),
-					c.getCelular(),
-					c.getTelefone(),
-					c.getCpf(),
-					c.getRg(),
-					c.getCep(),
-					c.getEndereco(),
-					c.getNumero(),
-					c.getComplemento(),
-					c.getBairro(),
-					c.getCidade(),
-					c.getEstado()
+					p.getId(),
+					p.getNome(),
+					p.getPreco(),
+					p.getQtd_estoque(),
+					p.getFornecedor()
+		
 			});
 		}
 	}
 	
-	public void alterarCliente() {
-		Cliente c = new Cliente();
-		DAO<Cliente> dao_cliente = new DAO<>(Cliente.class);
+	public void alterarProduto() {
+		Produto p = new Produto();
+		DAO<Produto> dao_produto = new DAO<>(Produto.class);
 		Integer parametro = Integer.parseInt(field_codigo.getText());
 		
-		c = dao_cliente.consultar("consultarPorId","id",parametro).get(0);
+		p = dao_produto.consultar("consultarProdPorId","id",parametro).get(0);
 		
-		c.setNome(field_nome_prod.getText());
-		c.setBairro(field_preco.getText());
-		c.setCidade(field_qtd_estoque.getText());
-		c.setEstado(box_fornecedor.getItemAt(box_fornecedor.getSelectedIndex()));
+		p.setNome(field_nome_prod.getText());
+		p.setPreco(Double.parseDouble(field_preco.getText()));
+		p.setQtd_estoque(Integer.parseInt(field_qtd_estoque.getText()));
+		p.setFornecedor((Fornecedor)box_fornecedor.getSelectedItem());
 		
-		dao_cliente.alterar(c);
+		dao_produto.alterar(p);
 		limparFormulario();
-		JOptionPane.showMessageDialog(FrmProdutos,"Usuário: "+ c.getNome()+"\nDados atualizados!");
+		JOptionPane.showMessageDialog(FrmProdutos,"Produtos: "+ p.getNome()+"\nDados atualizados!");
 	}
 	
-	public void excluirCliente() {
-		Cliente c = new Cliente();
-		DAO<Cliente> dao_cliente = new DAO<>(Cliente.class);
+	public void excluirProduto() {
+		Produto p = new Produto();
+		DAO<Produto> dao_produto = new DAO<>(Produto.class);
 		Integer parametro = Integer.parseInt(field_codigo.getText());
 		
-		c = dao_cliente.consultar("consultarPorId","id",parametro).get(0);
+		p = dao_produto.consultar("consultarProdPorId","id",parametro).get(0);
 		
-		dao_cliente.excluir(c);
+		dao_produto.excluir(p);
 		limparFormulario();
-		JOptionPane.showMessageDialog(FrmProdutos,"Usuário: "+ c.getNome()+"\nDados excluídos!");
+		JOptionPane.showMessageDialog(FrmProdutos,"Produto: "+ p.getNome()+"\nDados excluídos!");
 	}
 	
-	  public Cliente buscaCep(String cep) {
-	       
-	        WebServiceCep webServiceCep = WebServiceCep.searchCep(cep);
-	       
-
-	        Cliente obj = new Cliente();
-
-	        if (webServiceCep.wasSuccessful()) {
-	            obj.setEndereco(webServiceCep.getLogradouroFull());
-	            obj.setCidade(webServiceCep.getCidade());
-	            obj.setBairro(webServiceCep.getBairro());
-	            obj.setEstado(webServiceCep.getEstado());
-	            return obj;
-	        } else {
-	            JOptionPane.showMessageDialog(null, "Erro numero: " + webServiceCep.getResulCode());
-	            JOptionPane.showMessageDialog(null, "Descrição do erro: " + webServiceCep.getResultText());
-	            return null;
-	        }
-
-	    }
+	
 		
 		
 	
