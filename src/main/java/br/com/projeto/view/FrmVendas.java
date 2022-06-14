@@ -10,6 +10,8 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.function.BinaryOperator;
+import java.util.function.Function;
 
 import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
@@ -20,10 +22,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
-import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
-import javax.swing.border.EtchedBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.MaskFormatter;
 
@@ -43,10 +43,36 @@ public class FrmVendas extends JFrame {
 	private JTextField field_preco_prod;
 	private JTable tabela_itens_venda;
 	private JTextField field_total_venda;
-	private List<Item_venda> lista_itens_venda = new ArrayList<>();
 	
+	private List<Item_venda> lista_itens_venda = new ArrayList<>();
+	private Produto produto_item = new Produto();
+	private double valor_total;
 	
 
+
+	public double getValor_total() {
+		return valor_total;
+	}
+
+	public void setValor_total(double valor_total) {
+		this.valor_total = valor_total;
+	}
+
+	public List<Item_venda> getLista_itens_venda() {
+		return lista_itens_venda;
+	}
+
+	public void setLista_itens_venda(List<Item_venda> lista_itens_venda) {
+		this.lista_itens_venda = lista_itens_venda;
+	}
+
+	public Produto getProduto_item() {
+		return produto_item;
+	}
+
+	public void setProduto_item(Produto produto_item) {
+		this.produto_item = produto_item;
+	}
 
 	public FrmVendas() throws ParseException {
 //		setIconImage(Toolkit.getDefaultToolkit().getImage("//images/icon1.png"));
@@ -157,6 +183,16 @@ public class FrmVendas extends JFrame {
 		JButton bt_adicionar_prod = new JButton("Adicionar Item");
 		bt_adicionar_prod.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		bt_adicionar_prod.setBounds(190, 224, 126, 21);
+		bt_adicionar_prod.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				adicionarItem(produto_item);
+				setValor_total(obterTotal());
+				
+				field_total_venda.setText(Double.toString(getValor_total()));
+			}
+		});
 		painel_produto.add(bt_adicionar_prod);
 		
 		field_cod_prod = new JTextField();
@@ -185,6 +221,7 @@ public class FrmVendas extends JFrame {
 			
 			public void actionPerformed(ActionEvent e) {
 				Produto p = consultarProduto();
+				setProduto_item(p);
 				
 				field_cod_prod.setText(Integer.toString(p.getId()));
 				field_prod_nome.setText(p.getNome());
@@ -212,22 +249,24 @@ public class FrmVendas extends JFrame {
 		painel_venda.setLayout(null);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setViewportBorder(null);
-		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-		scrollPane.setBounds(10, 11, 279, 251);
+		scrollPane.setBounds(0, 0, 299, 262);
 		scrollPane.setViewportView(tabela_itens_venda);
+		scrollPane.setColumnHeaderView(tabela_itens_venda);
 		painel_venda.add(scrollPane);
 		
 		tabela_itens_venda = new JTable();
-		tabela_itens_venda.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-		tabela_itens_venda.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+		tabela_itens_venda.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		tabela_itens_venda.setFillsViewportHeight(true);
+		tabela_itens_venda.setVisible(true);
 		tabela_itens_venda.setShowVerticalLines(true);
+		tabela_itens_venda.setAutoCreateColumnsFromModel(true);
+		tabela_itens_venda.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 		tabela_itens_venda.setToolTipText("");
-		tabela_itens_venda.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		tabela_itens_venda.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		tabela_itens_venda.setSurrendersFocusOnKeystroke(true);
 		tabela_itens_venda.setModel(new DefaultTableModel(
 			new Object[][] {
-				{null, null, null, null, null},
+				{},
 			},
 			new String[] {
 				"C\u00F3digo", "Produto", "Qtd", "Pre\u00E7o", "Subtotal"
@@ -240,7 +279,13 @@ public class FrmVendas extends JFrame {
 				return columnEditables[column];
 			}
 		});
+		tabela_itens_venda.getColumnModel().getColumn(0).setPreferredWidth(49);
+		tabela_itens_venda.getColumnModel().getColumn(1).setPreferredWidth(165);
+		tabela_itens_venda.getColumnModel().getColumn(2).setPreferredWidth(46);
+		tabela_itens_venda.getColumnModel().getColumn(3).setPreferredWidth(65);
+		tabela_itens_venda.getColumnModel().getColumn(4).setPreferredWidth(58);
 		scrollPane.setColumnHeaderView(tabela_itens_venda);
+		scrollPane.setRowHeaderView(tabela_itens_venda);
 		
 		JPanel painel_total = new JPanel();
 		painel_total.setBackground(SystemColor.activeCaptionBorder);
@@ -248,14 +293,15 @@ public class FrmVendas extends JFrame {
 		painel_venda.add(painel_total);
 		painel_total.setLayout(null);
 		
-		JLabel lb_total = new JLabel("Total:");
+		JLabel lb_total = new JLabel("Total: R$");
 		lb_total.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		lb_total.setBounds(10, 25, 52, 25);
+		lb_total.setBounds(10, 25, 74, 25);
 		painel_total.add(lb_total);
 		
 		field_total_venda = new JTextField();
 		field_total_venda.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		field_total_venda.setBounds(81, 25, 146, 24);
+		field_total_venda.setBounds(90, 25, 137, 24);
+		field_total_venda.setAlignmentX(LEFT_ALIGNMENT);
 		painel_total.add(field_total_venda);
 		field_total_venda.setColumns(10);
 		
@@ -289,7 +335,7 @@ public class FrmVendas extends JFrame {
 		
 		Produto p = new Produto();
 		
-		if(field_cod_prod.getText().isEmpty()) {
+		if(!field_prod_nome.getText().isBlank()) {
 			p = dao_produto.consultar("consultarProdPorNome","nome", porNome).get(0);
 		}else {
 			Integer porCod = Integer.parseInt(field_cod_prod.getText());
@@ -306,10 +352,46 @@ public class FrmVendas extends JFrame {
 		 field_qtd_prod.setText("");
 	}
 	
-	public void adicionarItem() {
+	
+	public void adicionarItem(Produto prod) {
+		Item_venda iv = new Item_venda();
+		
+		
+		iv.setProduto(getProduto_item());
+		iv.setQtd(Integer.parseInt(field_qtd_prod.getText()));
+		double subtotal = 
+		Integer.parseInt(field_qtd_prod.getText()) * Double.parseDouble(field_preco_prod.getText());
+		
+		iv.setSubtotal(subtotal);
+		
+		lista_itens_venda.add(iv);
+		
+		DefaultTableModel tabela_itens = (DefaultTableModel)tabela_itens_venda.getModel();
+		tabela_itens.setNumRows(0);
+		
+		for(Item_venda item: lista_itens_venda) {
+			
+			tabela_itens.addRow(new Object[] {
+					item.getProduto().getId(),
+					item.getProduto().getNome(),
+					item.getQtd(),
+					item.getProduto().getPreco(),
+					item.getSubtotal()
+			});
+		}
+		
 		
 	}
 	
+	
+	public double obterTotal() {
+		Function<Item_venda, Double> valores = i ->i.getSubtotal();
+		BinaryOperator<Double> somar = (t,v) -> t+v;
+		
+		double total = lista_itens_venda.stream().map(valores).reduce(somar).get();
+		
+		return total;
+	}
 	
 	
 }//FimJanela

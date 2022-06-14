@@ -11,16 +11,19 @@ public class Iniciar {
 //        FrmClientes janela = new FrmClientes();
 //        janela.setVisible(true);
 //        
-//        FrmLogin janelaLog = new FrmLogin();
-//        janelaLog.setVisible(true);
-//        janelaLog.setLocationRelativeTo(null);
+        FrmLogin janelaLog = new FrmLogin();
+        janelaLog.setVisible(true);
+        janelaLog.setLocationRelativeTo(null);
     	
 //    	FrmFornecedores janela = new FrmFornecedores();
 //    	janela.setVisible(true);
 //    	
-    	FrmProdutos prodJ = new FrmProdutos();
-    	prodJ.setVisible(true);
-        
+//    	FrmProdutos prodJ = new FrmProdutos();
+//    	prodJ.setVisible(true);
+//    	
+//    	FrmVendas janelaVendas = new FrmVendas();
+//    	janelaVendas.setVisible(true);
+//        
 //        FrmMenu menu = new FrmMenu();
 //        menu.setVisible(true);
 //        
