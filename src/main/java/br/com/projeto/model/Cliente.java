@@ -20,6 +20,12 @@ import javax.persistence.NamedQuery;
 		@NamedQuery(name = "consultarPorId",
 		query = "select c from Cliente c where c.id = :id"),
 		
+		@NamedQuery(name = "consultarFornPorNome",
+		query ="select c from Fornecedor c where c.nome like :nome"),
+		
+		@NamedQuery(name = "consultarFornPorId",
+		query = "select c from Fornecedor c where c.id = :id"),
+		
 		@NamedQuery(name = "consultarFuncPorNome",
 		query ="select f from Funcionario f where f.nome like :nome"),
 		
@@ -33,6 +39,7 @@ import javax.persistence.NamedQuery;
 })
 
 @Inheritance(strategy = InheritanceType.JOINED)
+
 
 public class Cliente {
 	  
@@ -188,10 +195,7 @@ public class Cliente {
 
 	@Override
 	public String toString() {
-		return "Cliente [nome=" + nome + ", rg=" + rg + ", cpf=" + cpf + ", email=" + email + ", telefone=" + telefone
-				+ ", celular=" + celular + ", cep=" + cep + ", endereco=" + endereco + ", numero=" + numero
-				+ ", complemento=" + complemento + ", bairro=" + bairro + ", cidade=" + cidade + ", estado=" + estado
-				+ "]";
+		return String.format("%s", this.getNome());
 	}
 	  
 	  
