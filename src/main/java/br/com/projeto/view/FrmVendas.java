@@ -4,7 +4,12 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.SystemColor;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
@@ -22,6 +27,11 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.MaskFormatter;
 
+import br.com.projeto.dao.DAO;
+import br.com.projeto.model.Cliente;
+import br.com.projeto.model.Item_venda;
+import br.com.projeto.model.Produto;
+
 @SuppressWarnings("serial")
 public class FrmVendas extends JFrame {
 
@@ -33,6 +43,7 @@ public class FrmVendas extends JFrame {
 	private JTextField field_preco_prod;
 	private JTable tabela_itens_venda;
 	private JTextField field_total_venda;
+	private List<Item_venda> lista_itens_venda = new ArrayList<>();
 	
 	
 
@@ -73,9 +84,9 @@ public class FrmVendas extends JFrame {
 		painel_cliente.add(lb_cpf);
 		
 		MaskFormatter cpf_format_text = new MaskFormatter("###.###.###-##");
-		JFormattedTextField formattedTextField = new JFormattedTextField(cpf_format_text);
-		formattedTextField.setBounds(55, 26, 100, 20);
-		painel_cliente.add(formattedTextField);
+		JFormattedTextField field_cpf_cliente = new JFormattedTextField(cpf_format_text);
+		field_cpf_cliente.setBounds(55, 26, 100, 20);
+		painel_cliente.add(field_cpf_cliente);
 		
 		JLabel lb_nome = new JLabel("Nome:");
 		lb_nome.setFont(new Font("Tahoma", Font.PLAIN, 14));
@@ -89,15 +100,29 @@ public class FrmVendas extends JFrame {
 		
 		JLabel lb_data_venda = new JLabel("Data:");
 		lb_data_venda.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lb_data_venda.setBounds(206, 29, 46, 14);
+		lb_data_venda.setBounds(165, 27, 46, 14);
 		painel_cliente.add(lb_data_venda);
 		
-		MaskFormatter data_format_text = new MaskFormatter("##/##/####");
-		JFormattedTextField field_data_venda = new JFormattedTextField(data_format_text);
-		field_data_venda.setBounds(245, 26, 65, 20);
+//		MaskFormatter data_format_text = new MaskFormatter("##/##/####");
+		JTextField field_data_venda = new JTextField();
+		field_data_venda.setBounds(207, 26, 164, 20);
 		painel_cliente.add(field_data_venda);
 		
 		JButton bt_pesquisar_cliente = new JButton("Pesquisar");
+		bt_pesquisar_cliente.addActionListener(new ActionListener() {
+			
+		
+			@SuppressWarnings("deprecation")
+			public void actionPerformed(ActionEvent e) {
+				Cliente c = consultarCliente();
+				
+				field_nome.setText(c.getNome());
+				field_cpf_cliente.setText(c.getCpf());
+				Date data = new Date();
+				field_data_venda.setText(data.toGMTString());
+				
+			}
+		});
 		bt_pesquisar_cliente.setBounds(262, 69, 110, 23);
 		painel_cliente.add(bt_pesquisar_cliente);
 		
@@ -131,7 +156,7 @@ public class FrmVendas extends JFrame {
 		
 		JButton bt_adicionar_prod = new JButton("Adicionar Item");
 		bt_adicionar_prod.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		bt_adicionar_prod.setBounds(130, 214, 145, 39);
+		bt_adicionar_prod.setBounds(190, 224, 126, 21);
 		painel_produto.add(bt_adicionar_prod);
 		
 		field_cod_prod = new JTextField();
@@ -156,7 +181,29 @@ public class FrmVendas extends JFrame {
 		
 		JButton bt_pesquisar_item = new JButton("Pesquisar");
 		bt_pesquisar_item.setBounds(206, 45, 110, 19);
+		bt_pesquisar_item.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e) {
+				Produto p = consultarProduto();
+				
+				field_cod_prod.setText(Integer.toString(p.getId()));
+				field_prod_nome.setText(p.getNome());
+				field_preco_prod.setText(Double.toString(p.getPreco()));
+				
+			}
+		});
 		painel_produto.add(bt_pesquisar_item);
+		
+		JButton bt_limpar = new JButton("Limpar");
+		bt_limpar.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		bt_limpar.setBounds(63, 224, 109, 21);
+		bt_limpar.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e) {
+				limparFormularioProd();
+			}
+		});
+		painel_produto.add(bt_limpar);
 		
 		JPanel painel_venda = new JPanel();
 		painel_venda.setBackground(SystemColor.inactiveCaption);
@@ -222,6 +269,47 @@ public class FrmVendas extends JFrame {
 		
 		
 	
-	
 	}
+	
+	public Cliente consultarCliente() {
+		DAO<Cliente> dao_cliente = new DAO<>(Cliente.class);
+		String parametro = field_nome.getText()+"%";
+		
+		List<Cliente> lista = dao_cliente
+			.consultar("consultarPorNome","nome", parametro);
+		
+		return lista.get(0);
+	}
+	
+	public Produto consultarProduto() {
+		
+		DAO<Produto> dao_produto = new DAO<>(Produto.class);
+		
+		String porNome = field_prod_nome.getText()+"%";
+		
+		Produto p = new Produto();
+		
+		if(field_cod_prod.getText().isEmpty()) {
+			p = dao_produto.consultar("consultarProdPorNome","nome", porNome).get(0);
+		}else {
+			Integer porCod = Integer.parseInt(field_cod_prod.getText());
+			p = dao_produto.consultar("consultarProdPorId","id", porCod).get(0);
+		}
+		
+		return p;
+	}
+	
+	public void limparFormularioProd() {
+		 field_prod_nome.setText("");
+		 field_cod_prod.setText("");
+		 field_preco_prod.setText("");
+		 field_qtd_prod.setText("");
+	}
+	
+	public void adicionarItem() {
+		
+	}
+	
+	
+	
 }//FimJanela

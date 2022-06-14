@@ -15,9 +15,9 @@ public class Iniciar {
 //        janelaLog.setVisible(true);
 //        janelaLog.setLocationRelativeTo(null);
     	
-    	FrmFornecedores janela = new FrmFornecedores();
-    	janela.setVisible(true);
-    	
+//    	FrmFornecedores janela = new FrmFornecedores();
+//    	janela.setVisible(true);
+//    	
     	FrmProdutos prodJ = new FrmProdutos();
     	prodJ.setVisible(true);
         

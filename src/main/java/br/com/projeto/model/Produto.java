@@ -36,9 +36,8 @@ public class Produto {
 		
 	}
 	
-	public Produto(int id, String nome, double preco, int qtd_estoque, Fornecedor fornecedor) {
+	public Produto(String nome, double preco, int qtd_estoque, Fornecedor fornecedor) {
 		super();
-		this.id = id;
 		this.nome = nome;
 		this.preco = preco;
 		this.qtd_estoque = qtd_estoque;
@@ -86,7 +85,10 @@ public class Produto {
 	}
 	
 	
-	
+	@Override
+	public String toString() {
+		return this.getNome();
+	}
 	
 	
 }
