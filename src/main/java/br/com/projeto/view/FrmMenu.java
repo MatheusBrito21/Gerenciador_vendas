@@ -18,6 +18,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 import java.awt.Font;
 import java.awt.Color;
+import javax.swing.JButton;
 
 @SuppressWarnings("serial")
 public class FrmMenu extends JFrame {
@@ -141,12 +142,27 @@ public class FrmMenu extends JFrame {
 		JMenu menu_config = new JMenu("Configurações");
 		barra_menu.add(menu_config);
 		
-		JMenuItem menu_op_logout = new JMenuItem("Logout");
-		menu_config.add(menu_op_logout);
+		JButton bt_logout = new JButton("Logout");
+		bt_logout.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				fecharAplicacao();
+				FrmLogin janelaLogin;
+				
+				janelaLogin = new FrmLogin();
+				janelaLogin.setVisible(true);
+				janelaLogin.setLocationRelativeTo(null);
+			}
+		});
+		menu_config.add(bt_logout);
 		
-		JMenuItem menu_op_sair = new JMenuItem("Sair");
-		
-		menu_config.add(menu_op_sair);
+		JButton bt_sair = new JButton("Sair");
+		bt_sair.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				fecharAplicacao();
+			}
+		});
+		menu_config.add(bt_sair);
 		Menu = new JPanel();
 		Menu.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(Menu);
@@ -182,5 +198,9 @@ public class FrmMenu extends JFrame {
 		lb_nivel_acesso.setBounds(490, 11, 196, 14);
 		painel_status.add(lb_nivel_acesso);
 		
+	}
+	
+	public void fecharAplicacao() {
+		this.dispose();
 	}
 }

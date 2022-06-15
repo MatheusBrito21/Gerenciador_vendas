@@ -44,11 +44,12 @@ public class Venda {
 			this.data = new Date();
 		}
 		
-		public Venda(Cliente cliente, List<Item_venda> itens, double total) {
+		public Venda(Cliente cliente, List<Item_venda> itens, double total, Date data) {
 			super();
 			this.cliente = cliente;
 			this.itens = itens;
 			this.total = total;
+			this.data = data;
 		}
 
 

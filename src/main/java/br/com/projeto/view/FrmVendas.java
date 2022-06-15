@@ -44,9 +44,30 @@ public class FrmVendas extends JFrame {
 	private JTable tabela_itens_venda;
 	private JTextField field_total_venda;
 	
-	private List<Item_venda> lista_itens_venda = new ArrayList<>();
 	private Produto produto_item = new Produto();
+
+	//parametros que serao passados no construtor do recibo
+	private List<Item_venda> lista_itens_venda = new ArrayList<>();
+	private Cliente cliente;
+	private Date data_venda;
 	private double valor_total;
+	
+	public Date getData_venda() {
+		return data_venda;
+	}
+
+	public void setData_venda(Date data_venda) {
+		this.data_venda = data_venda;
+	}
+
+	public Cliente getCliente() {
+		return cliente;
+	}
+
+	public void setCliente(Cliente cliente) {
+		this.cliente = cliente;
+	}
+
 	
 
 
@@ -100,7 +121,7 @@ public class FrmVendas extends JFrame {
 		JPanel painel_cliente = new JPanel();
 		painel_cliente.setBackground(Color.GRAY);
 		painel_cliente.setForeground(Color.GRAY);
-		painel_cliente.setBounds(5, 98, 421, 118);
+		painel_cliente.setBounds(5, 98, 386, 118);
 		FrmVendas.add(painel_cliente);
 		painel_cliente.setLayout(null);
 		
@@ -141,10 +162,14 @@ public class FrmVendas extends JFrame {
 			@SuppressWarnings("deprecation")
 			public void actionPerformed(ActionEvent e) {
 				Cliente c = consultarCliente();
+				//armazena o cliente em uma variavel do painel de venda
+				//para ser enviado passado no construtor do recibo
+				setCliente(c);
 				
 				field_nome.setText(c.getNome());
 				field_cpf_cliente.setText(c.getCpf());
 				Date data = new Date();
+				setData_venda(data);
 				field_data_venda.setText(data.toGMTString());
 				
 			}
@@ -156,7 +181,7 @@ public class FrmVendas extends JFrame {
 		
 		JPanel painel_produto = new JPanel();
 		painel_produto.setBackground(Color.LIGHT_GRAY);
-		painel_produto.setBounds(5, 227, 421, 316);
+		painel_produto.setBounds(5, 227, 386, 316);
 		FrmVendas.add(painel_produto);
 		painel_produto.setLayout(null);
 		
@@ -244,29 +269,26 @@ public class FrmVendas extends JFrame {
 		
 		JPanel painel_venda = new JPanel();
 		painel_venda.setBackground(SystemColor.inactiveCaption);
-		painel_venda.setBounds(436, 98, 299, 446);
+		painel_venda.setBounds(401, 98, 334, 446);
 		FrmVendas.add(painel_venda);
 		painel_venda.setLayout(null);
 		
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(0, 0, 299, 262);
-		scrollPane.setViewportView(tabela_itens_venda);
-		scrollPane.setColumnHeaderView(tabela_itens_venda);
-		painel_venda.add(scrollPane);
 		
-		tabela_itens_venda = new JTable();
+		String[]colunas ={
+				"C\u00F3digo", "Produto", "Qtd", "Pre\u00E7o", "Subtotal"
+			};
+		Object[][] dados = {
+			{null, null, null, null, null}};
+		
+		tabela_itens_venda = new JTable(dados,colunas);
 		tabela_itens_venda.setFont(new Font("Tahoma", Font.PLAIN, 10));
-		tabela_itens_venda.setFillsViewportHeight(true);
-		tabela_itens_venda.setVisible(true);
 		tabela_itens_venda.setShowVerticalLines(true);
-		tabela_itens_venda.setAutoCreateColumnsFromModel(true);
-		tabela_itens_venda.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-		tabela_itens_venda.setToolTipText("");
+		tabela_itens_venda.setAutoResizeMode(NORMAL);
 		tabela_itens_venda.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		tabela_itens_venda.setSurrendersFocusOnKeystroke(true);
 		tabela_itens_venda.setModel(new DefaultTableModel(
 			new Object[][] {
-				{},
+				{null, null, null, null, null},
 			},
 			new String[] {
 				"C\u00F3digo", "Produto", "Qtd", "Pre\u00E7o", "Subtotal"
@@ -280,12 +302,16 @@ public class FrmVendas extends JFrame {
 			}
 		});
 		tabela_itens_venda.getColumnModel().getColumn(0).setPreferredWidth(49);
-		tabela_itens_venda.getColumnModel().getColumn(1).setPreferredWidth(165);
+		tabela_itens_venda.getColumnModel().getColumn(1).setPreferredWidth(135);
 		tabela_itens_venda.getColumnModel().getColumn(2).setPreferredWidth(46);
 		tabela_itens_venda.getColumnModel().getColumn(3).setPreferredWidth(65);
 		tabela_itens_venda.getColumnModel().getColumn(4).setPreferredWidth(58);
-		scrollPane.setColumnHeaderView(tabela_itens_venda);
-		scrollPane.setRowHeaderView(tabela_itens_venda);
+		
+		JScrollPane scrollPane = new JScrollPane(tabela_itens_venda);
+		tabela_itens_venda.setFillsViewportHeight(true);
+		scrollPane.setBounds(0, 0, 334, 262);
+		painel_venda.add(scrollPane);
+		
 		
 		JPanel painel_total = new JPanel();
 		painel_total.setBackground(SystemColor.activeCaptionBorder);
@@ -305,12 +331,28 @@ public class FrmVendas extends JFrame {
 		painel_total.add(field_total_venda);
 		field_total_venda.setColumns(10);
 		
-		JButton bt_pagamento = new JButton("Pagamento");
-		bt_pagamento.setBounds(24, 381, 115, 23);
-		painel_venda.add(bt_pagamento);
+		JButton bt_finalizar = new JButton("Finalizar");
+		bt_finalizar.setBounds(24, 381, 115, 23);
+		bt_finalizar.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e) {
+				ReciboVenda telaRecibo = new ReciboVenda(cliente, lista_itens_venda, data_venda,valor_total);
+				telaRecibo.setVisible(true);
+				telaRecibo.setLocationRelativeTo(null);
+				
+			}
+		});
+		painel_venda.add(bt_finalizar);
 		
 		JButton bt_cancelar = new JButton("Cancelar");
 		bt_cancelar.setBounds(149, 381, 115, 23);
+		bt_cancelar.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e) {
+				cancelarVenda();
+				field_total_venda.setText("");
+			}
+		});
 		painel_venda.add(bt_cancelar);
 		
 		
@@ -352,6 +394,12 @@ public class FrmVendas extends JFrame {
 		 field_qtd_prod.setText("");
 	}
 	
+	public void cancelarVenda() {
+		lista_itens_venda.clear();
+		DefaultTableModel tabela_itens = (DefaultTableModel)tabela_itens_venda.getModel();
+		tabela_itens.setNumRows(0);
+	}
+	
 	
 	public void adicionarItem(Produto prod) {
 		Item_venda iv = new Item_venda();
@@ -382,7 +430,6 @@ public class FrmVendas extends JFrame {
 		
 		
 	}
-	
 	
 	public double obterTotal() {
 		Function<Item_venda, Double> valores = i ->i.getSubtotal();
