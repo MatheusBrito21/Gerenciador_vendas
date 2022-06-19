@@ -89,17 +89,9 @@ public class ReciboVenda extends JFrame {
 		lb_cliente.setBounds(10, 70, 46, 14);
 		painel_codigo_venda.add(lb_cliente);
 
-		JLabel lb_end_forn = new JLabel("Endereço:");
-		lb_end_forn.setBounds(10, 130, 59, 14);
-		painel_codigo_venda.add(lb_end_forn);
-
 		JLabel lb_cliente_nome = new JLabel(c.getNome());
 		lb_cliente_nome.setBounds(52, 70, 291, 14);
 		painel_codigo_venda.add(lb_cliente_nome);
-
-		JLabel lb_end_forn_dados = new JLabel("New label");
-		lb_end_forn_dados.setBounds(80, 130, 274, 14);
-		painel_codigo_venda.add(lb_end_forn_dados);
 
 		JLabel linha_1 = new JLabel("********************************************************");
 		linha_1.setBounds(10, 155, 344, 14);
